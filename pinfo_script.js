@@ -3,6 +3,9 @@ const textnumRegex = /^[a-zA-Z0-9\s]+$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^[+0-9\s.-]+$/;
 const addressRegex = /^[A-Za-z0-9,.\/_\-\s]+$/;
+const yearRegex = /^\d{4}$/;
+const linkRegex = /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})+(?:\/\S*)?$/;
+
 
 const pInfoFname = document.getElementById('pinfo-fname')
 const pInfoProfess = document.getElementById('pinfo-profess')
@@ -60,7 +63,7 @@ function pillStat(tabID) {
 // Display proper pill stat text/image
 function pillVerify(tabID, navlinkID) {
   // Remove all child
-  var tabName = tabID == 'pinfo' ? "Information": tabID == 'exp' ? "Experience" :   "";
+  var tabName = tabID == 'pinfo' ? "Information": tabID == 'exp' ? "Experience" :  tabID == 'edu' ? "Education" : tabID == 'ref' ? "Reference" : tabID == 'prj' ? "Project" : "";
   const parentElement = document.getElementById(navlinkID);
   while (parentElement.firstChild) parentElement.removeChild(parentElement.firstChild);
 
@@ -156,7 +159,7 @@ function validatePinfoInput(event = null) {
   else if (!cityData.includes(city)) warningExp(pInfoCity, invalidPinfoFeeds[5], false, 'Type/Select data from the list!', 'pinfo', 'pinfo-nav-link')
 
   if (addr.length === 0) warningExp(pInfoAddress, invalidPinfoFeeds[6], false, 'Do not leave empty!', 'pinfo', 'pinfo-nav-link')
-  else if (addr.length > 100) warningExp(pInfoAddress, invalidPinfoFeeds[6], false, 'Maximum 100 characters!', 'pinfo', 'pinfo-nav-link')
+  else if (addr.length > 150) warningExp(pInfoAddress, invalidPinfoFeeds[6], false, 'Maximum 150 characters!', 'pinfo', 'pinfo-nav-link')
   else if (!addressRegex.test(addr.trim())) warningExp(pInfoAddress, invalidPinfoFeeds[6], false, 'No special character/number allow!', 'pinfo', 'pinfo-nav-link')
 
 

@@ -52,7 +52,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="tab" href="#edu">
-            <div class="process-pill d-flex flex-column align-items-center">
+            <div id="edu-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Education</div>
               <div class="process-icon bg-white border-primary">
               </div>
@@ -61,7 +61,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="tab" href="#cer">
-            <div class="process-pill d-flex flex-column align-items-center">
+            <div id="cer-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Certificates</div>
               <div class="process-icon bg-white border-primary">
               </div>
@@ -70,7 +70,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="tab" href="#skills">
-            <div class="process-pill d-flex flex-column align-items-center">
+            <div id="skills-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Skills</div>
               <div class="process-icon bg-white border-primary">
               </div>
@@ -79,8 +79,8 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="tab" href="#prj">
-            <div class="process-pill d-flex flex-column align-items-center">
-              <div class="mb-2 text-center text-primary">Projects/Activities</div>
+            <div id="prj-nav-link" class="process-pill d-flex flex-column align-items-center">
+              <div class="mb-2 text-center text-primary">Projects</div>
               <div class="process-icon bg-white border-primary">
               </div>
             </div>
@@ -88,7 +88,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="tab" href="#ref">
-            <div class="process-pill d-flex flex-column align-items-center">
+            <div id="ref-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Reference</div>
               <div class="process-icon bg-white border-primary">
               </div>
@@ -102,7 +102,7 @@
 
     <form action="/action.php" method="post" class="">
       <div class="tab-content">
-        <div id="pinfo" class="container tab-pane active"><br>
+        <!-- <div id="pinfo" class="container tab-pane active"><br>
           <h1 class="mb-3">Personal Information</h1>
           <p class="mb-4">Fill in your personal information below!</p>
           <div class="mb-3 mt-3">
@@ -192,26 +192,12 @@
                 style="display: none; max-height: 300px; object-fit: contain;">
             </div>
           </div>
-
-
-          <!-- <div class="mb-3">
-            <label for="pwd" class="form-label">Password:</label>
-            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required>
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-          </div>
-          <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" id="myCheck" name="remember" required>
-            <label class="form-check-label" for="myCheck">I agree on blabla.</label>
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Check this checkbox to continue.</div>
-          </div> -->
-        </div>
+        </div> -->
 
         <div id="exp" class="container tab-pane fade"><br>
           <h1 class="mb-3">Experience</h1>
           <p class="mb-4">Show your recruiter your experience (maximum 5)</p>
-          <div id="job-list" class="job-list">
+          <div id="job-list">
           </div>
           <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-job">
             <div class="btn-additem d-flex gap-1 align-items-center">
@@ -221,63 +207,19 @@
           </button>
         </div>
 
-
-
-
-
-
-
-        <!-- <div id="edu" class="container tab-pane fade"><br>
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <h4 class="card-title">Education #1</h4>
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              </div>
-              <div class="row">
-                <div class="col-md">
-                  <div class="mb-3">
-                    <label for="edu-des" class="form-label">Education description</label>
-                    <input type="text" class="form-control" id="edu-des" placeholder="Enter job title..." name="edu-des"
-                      required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                  </div>
-                </div>
-                <div class="col-md">
-                  <div class="mb-3">
-                    <label for="edu-name" class="form-label">Insitution name</label>
-                    <input type="text" class="form-control" id="edu-name" placeholder="Enter job title..." name="edu-name"
-                      required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md">
-                  <div class="mb-3">
-                    <label for="edu-start-date" class="form-label">Education start date</label>
-                    <input type="date" class="form-control" id="edu-start-date" name="edu-start-date" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                  </div>
-                </div>
-                <div class="col-md">
-                  <div class="mb-3">
-                    <label for="edu-end-date" class="form-label">Education end date</label>
-                    <input type="date" class="form-control" id="edu-end-date" name="edu-end-date" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div id="edu" class="container tab-pane fade"><br>
+          <h1 class="mb-3">Education</h1>
+          <p class="mb-4">Show your recruiter your education (maximum 5)</p>
+          <div id="edu-list">
           </div>
+          <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-edu">
+            <div class="btn-additem d-flex gap-1 align-items-center">
+              <p>Add</p>
+              <i class="fa-solid fa-plus"></i>
+            </div>
+          </button>
         </div>
-
-
-
+<!--
 
         <div id="cer" class="container tab-pane fade"><br>
           <div class="card">
@@ -326,134 +268,33 @@
         </div>
 
 
-
-
-
+-->
         <div id="prj" class="container tab-pane fade"><br>
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <h4 class="card-title">Project #1</h4>
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              </div>
-              <div class="mb-3">
-                <label for="prj-name" class="form-label">Project name</label>
-                <input type="text" class="form-control" id="prj-name" placeholder="Enter project name..." name="prj-name"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-
-              <div class="mb-3">
-                <label for="prj-year" class="form-label">Project year</label>
-                <input type="text" class="form-control" id="prj-year" placeholder="Enter project year..." name="prj-year"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-              <div class="mb-3">
-                <label for="prj-link" class="form-label">Project link</label>
-                <input type="text" class="form-control" id="prj-link" placeholder="Enter project link..." name="prj-link"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-              <div class="mb-3">
-                <label for="prj-des" class="form-label">Project des</label>
-                <input type="text" class="form-control" id="prj-des" placeholder="Enter project des..." name="prj-des"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-
-               
-
-              <p class="card-text">Some example text. Some example text.</p>
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-            </div>
+          <h1 class="mb-3">Project</h1>
+          <p class="mb-4">Show your recruiter your project (maximum 5)</p>
+          <div id="prj-list">
           </div>
+          <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-prj">
+            <div class="btn-additem d-flex gap-1 align-items-center">
+              <p>Add</p>
+              <i class="fa-solid fa-plus"></i>
+            </div>
+          </button>
         </div>
-
 
         <div id="ref" class="container tab-pane fade"><br>
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <h4 class="card-title">Referee #1</h4>
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              </div>
-              <div class="mb-3">
-                <label for="ref-name" class="form-label">Referee name</label>
-                <input type="text" class="form-control" id="ref-name" placeholder="Enter referee name..." name="ref-name"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-
-              <div class="mb-3">
-                <label for="ref-ins-name" class="form-label">Referee institution name</label>
-                <input type="text" class="form-control" id="ref-ins-name" placeholder="Enter referee institution name..." name="ref-ins-name"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-              <div class="mb-3">
-                <label for="ref-email" class="form-label">Referee email</label>
-                <input type="email" class="form-control" id="ref-email" placeholder="Enter referee email..." name="ref-email"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-              <div class="mb-3">
-                <label for="ref-phone" class="form-label">Referee phone number</label>
-                <input type="phone" class="form-control" id="ref-phone" placeholder="Enter referee phone number..." name="ref-phone"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-              <div class="mb-3">
-                <label for="ref-des" class="form-label">Referee relationship</label>
-                <input type="des" class="form-control" id="ref-des" placeholder="Enter referee relationship..." name="ref-des"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-              <div class="mb-3">
-                <label for="prj-link" class="form-label">Project link</label>
-                <input type="text" class="form-control" id="prj-link" placeholder="Enter project link..." name="prj-link"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-              <div class="mb-3">
-                <label for="prj-des" class="form-label">Project des</label>
-                <input type="text" class="form-control" id="prj-des" placeholder="Enter project des..." name="prj-des"
-                  required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-
-
-               
-
-              <p class="card-text">Some example text. Some example text.</p>
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-            </div>
+          <h1 class="mb-3">Reference</h1>
+          <p class="mb-4">Show your recruiter your reference (maximum 5)</p>
+          <div id="ref-list">
           </div>
+          <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-ref">
+            <div class="btn-additem d-flex gap-1 align-items-center">
+              <p>Add</p>
+              <i class="fa-solid fa-plus"></i>
+            </div>
+          </button>
         </div>
-      </div> -->
+      </div>
 
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
@@ -479,6 +320,10 @@
 
   <script src="./pinfo_script.js"></script>
   <script src="./exp_script.js"></script>
+  <script src="./edu_script.js"></script>
+
+  <script src="./prj_script.js"></script>
+  <script src="./ref_script.js"></script>
 </body>
 
 </html>

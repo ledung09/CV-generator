@@ -7,8 +7,6 @@ var idExp = 0;
 var idExpDes = 0;
 
 const jobList = document.getElementById("job-list")
-const jobLists = document.getElementsByClassName("job-list")
-
 const addJob = document.getElementById("add-job")
 
 const delJobs = document.getElementsByClassName('del-job')
@@ -120,7 +118,7 @@ addJob.addEventListener('click', () => {
       <div class="row">
         <div class="col-md">
           <div class="mb-3">
-            <label for="job-start-date${idExp}" class="form-label">Start date</label>
+            <label for="job-start-date${idExp}" class="form-label">Job start date</label>
             <input type="date" class="form-control" id="job-start-date${idExp}" name="job-start-date[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-feedback${idExp}">Please fill out this field.</div>
@@ -128,7 +126,7 @@ addJob.addEventListener('click', () => {
         </div>
         <div class="col-md">
           <div class="mb-3">
-            <label for="job-end-date${idExp}" class="form-label">End date</label>
+            <label for="job-end-date${idExp}" class="form-label">Job end date</label>
             <input type="date" class="form-control" id="job-end-date${idExp}" name="job-end-date[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-feedback${idExp}">Please fill out this field.</div>
@@ -171,11 +169,11 @@ addJob.addEventListener('click', () => {
     // Validare text
     if (value1.length === 0) warningExp(inp1, invalidFeeds[0], false, 'Do not leave empty!', 'exp', 'exp-nav-link')
     else if (value1.length > 50) warningExp(inp1, invalidFeeds[0], false, 'Maximum 50 characters!', 'exp', 'exp-nav-link')
-    else if (!textnumRegex.test(value1.trim())) warningExp(inp1, invalidFeeds[0], false, 'No special character allow!', 'exp', 'exp-nav-link')
+    else if (!addressRegex.test(value1.trim())) warningExp(inp1, invalidFeeds[0], false, 'No special character allow!', 'exp', 'exp-nav-link')
 
     if (value2.length === 0) warningExp(inp2, invalidFeeds[1], false, 'Do not leave empty!', 'exp', 'exp-nav-link')
     else if (value2.length > 100) warningExp(inp2, invalidFeeds[1], false, 'Maximum 100 characters!', 'exp', 'exp-nav-link')
-    else if (!textnumRegex.test(value2.trim())) warningExp(inp2, invalidFeeds[1], false, 'No special character allow!', 'exp', 'exp-nav-link')
+    else if (!addressRegex.test(value2.trim())) warningExp(inp2, invalidFeeds[1], false, 'No special character allow!', 'exp', 'exp-nav-link')
     
     // Verify date!
     var currentDate = new Date();
@@ -186,12 +184,12 @@ addJob.addEventListener('click', () => {
 
     var startDate = new Date(value3);
     var endDate = new Date(value4);
-
+      
     if (value3 === "") warningExp(inp3, invalidFeeds[2], false, 'Do not leave empty!', 'exp', 'exp-nav-link')
     if (startDate <= minDate || startDate >= maxDate || startDate > currentDate) warningExp(inp3, invalidFeeds[2], false, 'Please input valid date!', 'exp', 'exp-nav-link')
 
     if (value4 === "") warningExp(inp4, invalidFeeds[3], false, 'Do not leave empty!', 'exp', 'exp-nav-link')
-    if (endDate <= minDate || startDate >= maxDate || endDate > currentDate) warningExp(inp4, invalidFeeds[3], false, 'Please input valid date!', 'exp', 'exp-nav-link')
+    if (endDate <= minDate || endDate >= maxDate || endDate > currentDate) warningExp(inp4, invalidFeeds[3], false, 'Please input valid date!', 'exp', 'exp-nav-link')
     
     if (endDate < startDate) {
       warningExp(inp3, invalidFeeds[2], false, 'Please input valid date!', 'exp', 'exp-nav-link')
@@ -228,4 +226,3 @@ addJob.addEventListener('click', () => {
     updateJobInfo();
   })
 })
-
