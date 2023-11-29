@@ -28,7 +28,7 @@ const countries = document.getElementById('countries')
 const cities = document.getElementById('cities')
 
 const countryXhttp = new XMLHttpRequest();
-countryXhttp.open("GET", "/data/countries.json", true);
+countryXhttp.open("GET", "./data/countries.json", true);
 countryXhttp.onload = function() {
   if (countryXhttp.status === 200) {
     allData = JSON.parse(countryXhttp.response);
