@@ -113,6 +113,7 @@ addPrj.addEventListener('click', () => {
 
   validatePrjInput();
   updatePrjInfo();
+  finalSubmitCheck();
 
   const delPrjBtn = document.getElementById(`del-prj${idPrj}`)
 

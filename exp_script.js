@@ -203,6 +203,7 @@ addJob.addEventListener('click', () => {
   inp4.addEventListener('change', validateExpInput)
 
   validateExpInput();
+  finalSubmitCheck();
 
   updateJobInfo();
 

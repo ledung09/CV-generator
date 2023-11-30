@@ -128,6 +128,7 @@ addEdu.addEventListener('click', () => {
 
   validateEduInput();
   updateEduInfo();
+  finalSubmitCheck();
 
   const delEduBtn = document.getElementById(`del-edu${idEdu}`)
 

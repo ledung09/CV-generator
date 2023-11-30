@@ -14,7 +14,7 @@
 
 <body>
   <!-- Default -->
-
+<!-- 
   <div class="process-icon bg-white border-primary">
   </div>
 
@@ -25,7 +25,7 @@
   <div
     class="process-icon bg-white icon-danger border-danger bg-white d-flex justify-content-center align-items-center">
     <i class="fa-solid fa-exclamation text-danger"></i>
-  </div>
+  </div> -->
 
   <div class="container mt-3">
     <!-- Nav pills -->
@@ -187,7 +187,7 @@
                 <li>Adhere to company-specific guidelines regarding photo inclusion in CVs.</li>
               </ul>
             </div>
-            <div class="col-md d-flex justify-content-center">
+            <div class="col-md d-flex justify-content-center mb-3">
               <img src="" alt="Profile image" class="w-75 rounded-2" id="pinfo-uploadedImage"
                 style="display: none; max-height: 300px; object-fit: contain;">
             </div>
@@ -273,18 +273,12 @@
           </button>
         </div>
       </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="w-100 d-flex justify-content-center mt-4">
+        <button type="submit" class="btn btn-primary btn-sm w-100 disabled" id="final-submit">Submit</button>
+      </div>
     </form>
 
     <!-- Tab panes -->
-
-
-
-
-
-
-
   </div>
 
 
@@ -296,6 +290,7 @@
   bar.classList.remove("is-valid")
   </script>   -->
 
+  <script src="./tab_script.js"></script>
   <script src="./pinfo_script.js"></script>
   <script src="./exp_script.js"></script>
   <script src="./edu_script.js"></script>

@@ -123,6 +123,7 @@ addSkills.addEventListener("click", () => {
 
   validateSkillsInput();
   updateSkillInfo();
+  finalSubmitCheck();
 
   const delSkillsBtn = document.getElementById(`del-skills${idSkills}`);
 

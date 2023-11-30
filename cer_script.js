@@ -114,6 +114,7 @@ addCer.addEventListener('click', () => {
 
   validatePrjInput();
   updateCerInfo();
+  finalSubmitCheck();
 
   const delCerBtn = document.getElementById(`del-cer${idCer}`)
 

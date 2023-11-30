@@ -128,6 +128,7 @@ addRef.addEventListener('click', () => {
 
   validateRefInput();
   updateRefInfo();
+  finalSubmitCheck();
 
   const delRefBtn = document.getElementById(`del-ref${idRef}`)
 
