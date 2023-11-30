@@ -142,51 +142,80 @@ pInfoProfileImg.addEventListener('change', validatePinfoFileInput)
 // Add media
 
 const addMedia = document.getElementById('pinfo-add-media');
-const mediaList = document.getElementById('pinfo-media-list')
+const mediaList = document.getElementById('pinfo-media-list');
+const delMediaBtns = document.getElementsByClassName('del-media')
+
 var mediaID = 0;
 
 addMedia.addEventListener('click', () => {
   mediaID++;
   var newSocialMediaDiv = document.createElement('div');
+  newSocialMediaDiv.classList.add('mb-3', 'media-card')
   newSocialMediaDiv.innerHTML = `
-    <div class="mb-3">
-      <div class="d-flex gap-2 align-items-center">
-        <div class="input-group" >
-          <select class="form-select w-25">
-            <option selected disabled>Select social media</option>
-            <option value="LinkedIn">LinkedIn</option>
-            <option value="Twitter">Twitter</option>
-            <option value="GitHub">GitHub</option>
-            <option value="Instagram">Instagram</option>
-            <option value="Facebook">Facebook</option>
-            <option value="Dribbble">Dribbble</option>
-            <option value="Stack Overflow">Stack Overflow</option>
-            <option value="AngelList">AngelList</option>
-            <option value="Pinterest">Pinterest</option>
-            <option value="TikTok">TikTok</option>
-            <option value="GitLab">GitLab</option>
-            <option value="Bitbucket">Bitbucket</option>
-            <option value="other">Other</option>
-          </select>
-          <input type="text" class="form-control w-25" placeholder="Enter social media name..." name="media-name[]" required>
-          <input type="text" class="form-control w-50" placeholder="Enter social media link..." name="media-link[]" required>
-        </div>
-        <button type="button" class="btn-close" aria-label="Close" id="del-media${mediaID}"></button> 
+    <div class="d-flex gap-2 align-items-center">
+      <div class="input-group" >
+        <select class="form-select w-25" id="mediaSelect${mediaID}">
+          <option selected disabled>Select social media</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Twitter">Twitter</option>
+          <option value="GitHub">GitHub</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Dribbble">Dribbble</option>
+          <option value="Stack Overflow">Stack Overflow</option>
+          <option value="AngelList">AngelList</option>
+          <option value="Pinterest">Pinterest</option>
+          <option value="TikTok">TikTok</option>
+          <option value="GitLab">GitLab</option>
+          <option value="Bitbucket">Bitbucket</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="text" class="form-control w-25 d-none" placeholder="Enter social media name..." name="media-name[]" required id="mediaName${mediaID}">
+        <input type="text" class="form-control w-75" placeholder="Enter social media link..." name="media-link[]" required id="mediaLink${mediaID}">
       </div>
-      <div class="valid-feedback">Valid.</div>
-      <div class="invalid-feedback invalid-pinfo">Please fill out this field.</div>
+      <button type="button" class="btn-close del-media" aria-label="Close" id="del-media${mediaID}"></button> 
     </div>
+    <div class="valid-feedback">Valid.</div>
+    <div class="invalid-feedback invalid-pinfo">Please fill out this field.</div>
   `;
   mediaList.appendChild(newSocialMediaDiv);
 
+  const mediaCard = document.getElementsByClassName('media-card')
+  if (mediaCard.length === 5) addMedia.style.display = 'none'
+  if (mediaCard.length === 1) delMediaBtns[0].style.display = 'none'
+  else delMediaBtns[0].style.display = 'flex';  
+
+  const mediaSelect = document.getElementById(`mediaSelect${mediaID}`)
+  const mediaName = document.getElementById(`mediaName${mediaID}`)
+  const mediaLink = document.getElementById(`mediaLink${mediaID}`)
+  
+  mediaSelect.addEventListener('change', (e) => {
+    var slValue = e.target.value
+    if (slValue !== 'other') {
+      mediaName.classList.add('d-none')
+      mediaLink.classList.add('w-75')
+      mediaLink.classList.remove('w-50')
+    } else {
+      mediaName.value = ""
+      mediaName.classList.remove('d-none')
+      mediaLink.classList.remove('w-75')
+      mediaLink.classList.add('w-50')
+    }
+  })
+  
+
 
   const delMediaBtn = document.getElementById(`del-media${mediaID}`)
+
   delMediaBtn.addEventListener('click', (e) => {
     e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
+    if (mediaCard.length < 5) addMedia.style.display = 'flex'
+    if (mediaCard.length === 1) delMediaBtns[0].style.display = 'none'
+    else delMediaBtns[0].style.display = 'flex';
   })
 })
 
-
+// Verify media inputs
 
 // Test on open
 finalSubmitCheck();

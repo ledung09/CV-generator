@@ -174,10 +174,10 @@
           <div class="mb-3">
             <label class="form-label">Social media (maximum 5)</label>
             <div id="pinfo-media-list">
-              <div class="mb-3">
+              <!-- <div class="mb-3 media-card">
                 <div class="d-flex gap-2 align-items-center">
                   <div class="input-group" >
-                    <select class="form-select w-25">
+                    <select class="form-select w-25" id="mediaSelect0">
                       <option selected disabled>Select social media</option>
                       <option value="LinkedIn">LinkedIn</option>
                       <option value="Twitter">Twitter</option>
@@ -193,14 +193,14 @@
                       <option value="Bitbucket">Bitbucket</option>
                       <option value="other">Other</option>
                     </select>
-                    <input type="text" class="form-control w-25" placeholder="Enter social media name..." name="media-name[]" required>
-                    <input type="text" class="form-control w-50" placeholder="Enter social media link..." name="media-link[]" required>
+                    <input type="text" class="form-control w-25 d-none" placeholder="Enter social media name..." name="media-name[]" required id="mediaName0">
+                    <input type="text" class="form-control w-75" placeholder="Enter social media link..." name="media-link[]" required id="mediaLink0">
                   </div>
-                  <button type="button" class="btn-close" aria-label="Close" id="del-media0"></button>
+                  <button type="button" class="btn-close del-media" aria-label="Close" id="del-media0"></button>
                 </div>
                 <div class="valid-feedback">Valid.</div>
                 <div class="invalid-feedback invalid-pinfo">Please fill out this field.</div>
-              </div>
+              </div> -->
             </div>
 
             <button type="button" class="btn btn-secondary btn-sm mb-3" id="pinfo-add-media">
