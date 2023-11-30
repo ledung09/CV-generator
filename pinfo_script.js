@@ -8,7 +8,6 @@ const pInfoCity = document.getElementById('pinfo-city')
 const pInfoAddress = document.getElementById('pinfo-address')
 // Img
 const pInfoProfileImg = document.getElementById('pinfo-image')
-
 const invalidPinfoFeeds = document.getElementsByClassName('invalid-pinfo')
 
 // Country select box
@@ -137,6 +136,55 @@ pInfoCity.addEventListener('keyup', validatePinfoInput)
 pInfoAddress.addEventListener('keyup', validatePinfoInput)
 pInfoProfileImg.addEventListener('change', validatePinfoInput)
 pInfoProfileImg.addEventListener('change', validatePinfoFileInput)
+
+
+
+// Add media
+
+const addMedia = document.getElementById('pinfo-add-media');
+const mediaList = document.getElementById('pinfo-media-list')
+var mediaID = 0;
+
+addMedia.addEventListener('click', () => {
+  mediaID++;
+  var newSocialMediaDiv = document.createElement('div');
+  newSocialMediaDiv.innerHTML = `
+    <div class="mb-3">
+      <div class="d-flex gap-2 align-items-center">
+        <div class="input-group" >
+          <select class="form-select w-25">
+            <option selected disabled>Select social media</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Twitter">Twitter</option>
+            <option value="GitHub">GitHub</option>
+            <option value="Instagram">Instagram</option>
+            <option value="Facebook">Facebook</option>
+            <option value="Dribbble">Dribbble</option>
+            <option value="Stack Overflow">Stack Overflow</option>
+            <option value="AngelList">AngelList</option>
+            <option value="Pinterest">Pinterest</option>
+            <option value="TikTok">TikTok</option>
+            <option value="GitLab">GitLab</option>
+            <option value="Bitbucket">Bitbucket</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" class="form-control w-25" placeholder="Enter social media name..." name="media-name[]" required>
+          <input type="text" class="form-control w-50" placeholder="Enter social media link..." name="media-link[]" required>
+        </div>
+        <button type="button" class="btn-close" aria-label="Close" id="del-media${mediaID}"></button> 
+      </div>
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback invalid-pinfo">Please fill out this field.</div>
+    </div>
+  `;
+  mediaList.appendChild(newSocialMediaDiv);
+
+
+  const delMediaBtn = document.getElementById(`del-media${mediaID}`)
+  delMediaBtn.addEventListener('click', (e) => {
+    e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
+  })
+})
 
 
 

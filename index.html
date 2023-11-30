@@ -118,6 +118,8 @@
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-pinfo">Please fill out this field.</div>
           </div>
+          
+          
           <div class="row">
             <div class="col-md">
               <div class="mb-3">
@@ -129,15 +131,86 @@
               </div>
             </div>
             <div class="col-md">
+
+              <div id="pinfo-phone-list">
+                <div class="mb-3">
+                  <label for="pinfo-phone" class="form-label">Phone number</label>
+                  <input type="tel" class="form-control" id="pinfo-phone" placeholder="Enter phone number..." name="phone[]"
+                    required>
+                  <div class="valid-feedback">Valid.</div>
+                  <div class="invalid-feedback invalid-pinfo">Please fill out this field.</div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex gap-2 align-items-center">
+                    <div class="input-group mt-3 mb-3">
+                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                        Dropdown button
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Link 1</a></li>
+                        <li><a class="dropdown-item" href="#">Link 2</a></li>
+                        <li><a class="dropdown-item" href="#">Link 3</a></li>
+                      </ul>
+                      <input type="text" class="form-control" placeholder="Username" value="aaa">
+                      <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close" id="del-phone"></button>
+                  </div>
+                  <div class="valid-feedback">Valid.</div>
+                  <div class="invalid-feedback invalid-pinfo">Please fill out this field.</div>
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-secondary btn-sm mb-3" id="pinfo-add-phone">
+                <div class="btn-additem d-flex gap-1 align-items-center">
+                  <p>Add</p>
+                  <i class="fa-solid fa-plus"></i>
+                </div>
+              </button>
+            </div>
+
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Social media (maximum 5)</label>
+            <div id="pinfo-media-list">
               <div class="mb-3">
-                <label for="pinfo-phone" class="form-label">Phone number</label>
-                <input type="tel" class="form-control" id="pinfo-phone" placeholder="Enter phone number..." name="phone"
-                  required>
+                <div class="d-flex gap-2 align-items-center">
+                  <div class="input-group" >
+                    <select class="form-select w-25">
+                      <option selected disabled>Select social media</option>
+                      <option value="LinkedIn">LinkedIn</option>
+                      <option value="Twitter">Twitter</option>
+                      <option value="GitHub">GitHub</option>
+                      <option value="Instagram">Instagram</option>
+                      <option value="Facebook">Facebook</option>
+                      <option value="Dribbble">Dribbble</option>
+                      <option value="Stack Overflow">Stack Overflow</option>
+                      <option value="AngelList">AngelList</option>
+                      <option value="Pinterest">Pinterest</option>
+                      <option value="TikTok">TikTok</option>
+                      <option value="GitLab">GitLab</option>
+                      <option value="Bitbucket">Bitbucket</option>
+                      <option value="other">Other</option>
+                    </select>
+                    <input type="text" class="form-control w-25" placeholder="Enter social media name..." name="media-name[]" required>
+                    <input type="text" class="form-control w-50" placeholder="Enter social media link..." name="media-link[]" required>
+                  </div>
+                  <button type="button" class="btn-close" aria-label="Close" id="del-media0"></button>
+                </div>
                 <div class="valid-feedback">Valid.</div>
                 <div class="invalid-feedback invalid-pinfo">Please fill out this field.</div>
               </div>
             </div>
+
+            <button type="button" class="btn btn-secondary btn-sm mb-3" id="pinfo-add-media">
+              <div class="btn-additem d-flex gap-1 align-items-center">
+                <p>Add</p>
+                <i class="fa-solid fa-plus"></i>
+              </div>
+            </button>
           </div>
+
           <div class="row">
             <div class="col-md">
               <div class="mb-3">
