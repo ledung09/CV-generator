@@ -102,7 +102,7 @@
 
     <form action="/action.php" method="post" class="">
       <div class="tab-content">
-        <!-- <div id="pinfo" class="container tab-pane active"><br>
+        <div id="pinfo" class="container tab-pane active"><br>
           <h1 class="mb-3">Personal Information</h1>
           <p class="mb-4">Fill in your personal information below!</p>
           <div class="mb-3 mt-3">
@@ -192,7 +192,7 @@
                 style="display: none; max-height: 300px; object-fit: contain;">
             </div>
           </div>
-        </div> -->
+        </div>
 
         <div id="exp" class="container tab-pane fade"><br>
           <h1 class="mb-3">Experience</h1>
@@ -219,56 +219,34 @@
             </div>
           </button>
         </div>
-<!--
+
 
         <div id="cer" class="container tab-pane fade"><br>
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <h4 class="card-title">Certificate #1</h4>
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              </div>
-              <div class="row">
-                <div class="col-md">
-                  <div class="mb-3">
-                    <label for="cer-name" class="form-label">Certificate name</label>
-                    <input type="text" class="form-control" id="cer-name" placeholder="Enter certificate name..."
-                      name="cer-name" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                  </div>
-                </div>
-                <div class="col-md">
-                  <div class="mb-3">
-                    <label for="cer-year" class="form-label">Year of certification</label>
-                    <input type="text" class="form-control" id="cer-year" name="cer-year" placeholder="Enter year..."
-                      required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="mb-3">
-                <label for="cer-ins-name" class="form-label">Certifying institution name</label>
-                <input type="text" class="form-control" id="cer-ins-name"
-                  placeholder="Enter certifying institution namee..." name="cer-ins-name" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-            </div>
+          <h1 class="mb-3">Certificate</h1>
+          <p class="mb-4">Show your recruiter your certificate (maximum 5)</p>
+          <div id="cer-list">
           </div>
+          <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-cer">
+            <div class="btn-additem d-flex gap-1 align-items-center">
+              <p>Add</p>
+              <i class="fa-solid fa-plus"></i>
+            </div>
+          </button>
         </div>
-
 
         <div id="skills" class="container tab-pane fade"><br>
-          <h3>Menu 1</h3>
-          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat.</p>
+          <h1 class="mb-3">Skills</h1>
+          <p class="mb-4">Show your recruiter your skillsets (maximum 5)</p>
+          <div id="skills-list">
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-skills">
+            <div class="btn-additem d-flex gap-1 align-items-center">
+              <p>Add</p>
+              <i class="fa-solid fa-plus"></i>
+            </div>
+          </button>
         </div>
 
-
--->
         <div id="prj" class="container tab-pane fade"><br>
           <h1 class="mb-3">Project</h1>
           <p class="mb-4">Show your recruiter your project (maximum 5)</p>
@@ -321,7 +299,8 @@
   <script src="./pinfo_script.js"></script>
   <script src="./exp_script.js"></script>
   <script src="./edu_script.js"></script>
-
+  <script src="./cer_script.js"></script>
+  <script src="./skills_script.js"></script>
   <script src="./prj_script.js"></script>
   <script src="./ref_script.js"></script>
 </body>

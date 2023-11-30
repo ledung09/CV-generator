@@ -5,7 +5,7 @@ const phoneRegex = /^[+0-9\s.-]+$/;
 const addressRegex = /^[A-Za-z0-9,.\/_\-\s]+$/;
 const yearRegex = /^\d{4}$/;
 const linkRegex = /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})+(?:\/\S*)?$/;
-
+const skillRegex = /^[A-Za-z0-9 !@#$%^&*()_+{}\[\]:;<>,.?/~`|-]+$/;
 
 const pInfoFname = document.getElementById('pinfo-fname')
 const pInfoProfess = document.getElementById('pinfo-profess')
@@ -63,7 +63,7 @@ function pillStat(tabID) {
 // Display proper pill stat text/image
 function pillVerify(tabID, navlinkID) {
   // Remove all child
-  var tabName = tabID == 'pinfo' ? "Information": tabID == 'exp' ? "Experience" :  tabID == 'edu' ? "Education" : tabID == 'ref' ? "Reference" : tabID == 'prj' ? "Project" : "";
+  var tabName = tabID == 'pinfo' ? "Information": tabID == 'exp' ? "Experience" :  tabID == 'edu' ? "Education" : tabID == 'ref' ? "Reference" : tabID == 'prj' ? "Project" :  tabID == 'cer' ? "Certificate" :  tabID == 'skills' ? "Skills" : "";
   const parentElement = document.getElementById(navlinkID);
   while (parentElement.firstChild) parentElement.removeChild(parentElement.firstChild);
 
