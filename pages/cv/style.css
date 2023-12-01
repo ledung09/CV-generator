@@ -12,10 +12,4 @@
 .process-icon i { font-size: 12px; }
 
 /* Process pill */
-.process-pill {
-  width: fit-content;
-}
-
-.temp:valid {
-  border-color: yellow !important;
-}
+.process-pill { width: fit-content; }
