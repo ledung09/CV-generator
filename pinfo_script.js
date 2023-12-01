@@ -152,10 +152,10 @@ addMedia.addEventListener('click', () => {
   var newSocialMediaDiv = document.createElement('div');
   newSocialMediaDiv.classList.add('mb-3', 'media-card')
   newSocialMediaDiv.innerHTML = `
-    <div class="d-flex gap-2 align-items-center">
-      <div class="input-group" >
+    <div class="d-flex gap-2 align-items-center valid-container" id="mediaVerify${mediaID}">
+      <div class="input-group">
         <select class="form-select w-25" id="mediaSelect${mediaID}">
-          <option selected disabled>Select social media</option>
+          <option value="" selected disabled>Select social media</option>
           <option value="LinkedIn">LinkedIn</option>
           <option value="Twitter">Twitter</option>
           <option value="GitHub">GitHub</option>
@@ -176,22 +176,48 @@ addMedia.addEventListener('click', () => {
       <button type="button" class="btn-close del-media" aria-label="Close" id="del-media${mediaID}"></button> 
     </div>
     <div class="valid-feedback">Valid.</div>
-    <div class="invalid-feedback invalid-pinfo">Please fill out this field.</div>
+    <div class="invalid-feedback" id="invalid-media${mediaID}">Please fill out this field.</div>
   `;
   mediaList.appendChild(newSocialMediaDiv);
 
   const mediaCard = document.getElementsByClassName('media-card')
   if (mediaCard.length === 5) addMedia.style.display = 'none'
-  if (mediaCard.length === 1) delMediaBtns[0].style.display = 'none'
-  else delMediaBtns[0].style.display = 'flex';  
+  // if (mediaCard.length === 1) delMediaBtns[0].style.display = 'none'
+  // else delMediaBtns[0].style.display = 'flex';  
+  validatePinfoInput()
 
   const mediaSelect = document.getElementById(`mediaSelect${mediaID}`)
   const mediaName = document.getElementById(`mediaName${mediaID}`)
   const mediaLink = document.getElementById(`mediaLink${mediaID}`)
   
+  
+
+  const delMediaBtn = document.getElementById(`del-media${mediaID}`)
+  delMediaBtn.addEventListener('click', (e) => {
+    e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
+    if (mediaCard.length < 5) addMedia.style.display = 'flex'
+    // if (mediaCard.length === 1) delMediaBtns[0].style.display = 'none'
+    // else delMediaBtns[0].style.display = 'flex';
+    validatePinfoInput()
+  })
+
+
+  const mediaValid = document.getElementById(`mediaVerify${mediaID}`)
+  const invalidMediaFeed = document.getElementById(`invalid-media${mediaID}`)
+
+  function validateMediaInput() {
+    if (mediaSelect.value === "" || mediaName.value === "" || mediaLink.value === "") warningExp(mediaValid, invalidMediaFeed, false, 'Do not leave any field empty!', 'pinfo', 'pinfo-nav-link')
+    else if (!linkRegex.test(mediaLink.value)) warningExp(mediaValid, invalidMediaFeed, false, 'Invalid link format!', 'pinfo', 'pinfo-nav-link')
+    else warningExp(mediaValid, invalidMediaFeed, true, '', 'pinfo', 'pinfo-nav-link')
+    validatePinfoInput()
+  }
+
+  validateMediaInput()
+
   mediaSelect.addEventListener('change', (e) => {
     var slValue = e.target.value
     if (slValue !== 'other') {
+      mediaName.value = slValue
       mediaName.classList.add('d-none')
       mediaLink.classList.add('w-75')
       mediaLink.classList.remove('w-50')
@@ -201,21 +227,16 @@ addMedia.addEventListener('click', () => {
       mediaLink.classList.remove('w-75')
       mediaLink.classList.add('w-50')
     }
+    validateMediaInput();
   })
-  
 
+  mediaName.addEventListener('keyup', validateMediaInput)
+  mediaLink.addEventListener('keyup', validateMediaInput)
 
-  const delMediaBtn = document.getElementById(`del-media${mediaID}`)
-
-  delMediaBtn.addEventListener('click', (e) => {
-    e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
-    if (mediaCard.length < 5) addMedia.style.display = 'flex'
-    if (mediaCard.length === 1) delMediaBtns[0].style.display = 'none'
-    else delMediaBtns[0].style.display = 'flex';
-  })
 })
 
 // Verify media inputs
+
 
 // Test on open
 finalSubmitCheck();

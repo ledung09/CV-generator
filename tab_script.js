@@ -29,6 +29,10 @@ function pillStat(tabID) {
   const tab = document.getElementById(tabID) 
   const inputs = tab.getElementsByTagName('input');
   for (var i=0; i<inputs.length; i++) if (inputs[i].classList.contains('is-invalid')) return -1;
+  
+  const validContainer = tab.getElementsByClassName('valid-container');
+  for (var i=0; i<validContainer.length; i++) if (validContainer[i].classList.contains('is-invalid')) return -1;
+  
   return 1; 
 }
 
