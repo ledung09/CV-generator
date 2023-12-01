@@ -84,3 +84,61 @@ function warningExp(inputitem, textitem, valid, text, tabID, tabLinkID) {
   }
   pillVerify(tabID, tabLinkID)
 }
+
+// Click on show!
+var firstClickFlag = [0, 0, 0, 0, 0, 0, 0]
+const addBtnList = ['job', 'edu', 'cer', 'skills', 'prj', 'ref']
+const navLinkA = document.getElementsByClassName('nav-link-tab')
+
+Array.from(navLinkA).forEach((nav, idx) => {
+  if (idx !== 0) {
+    nav.addEventListener('click', () => {
+      if (firstClickFlag[idx] === 0) {
+        document.getElementById(`add-${addBtnList[idx-1]}`).click();
+        firstClickFlag[idx] = 1;
+      }
+    })
+  }
+})
+
+// navLinkA[1].addEventListener('click', () => {
+//   if (firstClickFlag[1] === 0) {
+//     document.getElementById('add-job').click();
+//     firstClickFlag[1] = 1;
+//   }
+// })
+
+// navLinkA[2].addEventListener('click', () => {
+//   if (firstClickFlag[2] === 0) {
+//     document.getElementById('add-edu').click();
+//     firstClickFlag[2] = 1;
+//   }
+// })
+
+// navLinkA[3].addEventListener('click', () => {
+//   if (firstClickFlag[3] === 0) {
+//     document.getElementById('add-cer').click();
+//     firstClickFlag[3] = 1;
+//   }
+// })
+
+// navLinkA[4].addEventListener('click', () => {
+//   if (firstClickFlag[4] === 0) {
+//     document.getElementById('add-skills').click();
+//     firstClickFlag[4] = 1;
+//   }
+// })
+
+// navLinkA[5].addEventListener('click', () => {
+//   if (firstClickFlag[5] === 0) {
+//     document.getElementById('add-prj').click();
+//     firstClickFlag[5] = 1;
+//   }
+// })
+
+// navLinkA[6].addEventListener('click', () => {
+//   if (firstClickFlag[6] === 0) {
+//     document.getElementById('add-ref').click();
+//     firstClickFlag[6] = 1;
+//   }
+// })

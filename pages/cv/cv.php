@@ -20,7 +20,7 @@
       <!-- <div class="bg-grey" style="height: 2px; position: absolute; width: 100%; bottom: 10px"></div> -->
       <ul class="nav nav-tabs d-flex align-items-end" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" data-bs-toggle="tab" href="#pinfo">
+          <a class="nav-link-tab nav-link active" data-bs-toggle="tab" href="#pinfo">
             <div id="pinfo-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-primary text-center">Information</div>
               <div class="process-icon bg-white border-primary"></div>
@@ -28,7 +28,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#exp">
+          <a class="nav-link-tab nav-link" data-bs-toggle="tab" href="#exp">
             <div id="exp-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Experience</div>
               <div class="process-icon bg-white border-primary"></div>
@@ -36,7 +36,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#edu">
+          <a class="nav-link-tab nav-link" data-bs-toggle="tab" href="#edu">
             <div id="edu-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Education</div>
               <div class="process-icon bg-white border-primary"></div>
@@ -44,7 +44,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#cer">
+          <a class="nav-link-tab nav-link" data-bs-toggle="tab" href="#cer">
             <div id="cer-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Certificates</div>
               <div class="process-icon bg-white border-primary"></div>
@@ -52,7 +52,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#skills">
+          <a class="nav-link-tab nav-link" data-bs-toggle="tab" href="#skills">
             <div id="skills-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Skills</div>
               <div class="process-icon bg-white border-primary"></div>
@@ -60,7 +60,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#prj">
+          <a class="nav-link-tab nav-link" data-bs-toggle="tab" href="#prj">
             <div id="prj-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Projects</div>
               <div class="process-icon bg-white border-primary"></div>
@@ -68,7 +68,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#ref">
+          <a class="nav-link-tab nav-link" data-bs-toggle="tab" href="#ref">
             <div id="ref-nav-link" class="process-pill d-flex flex-column align-items-center">
               <div class="mb-2 text-center text-primary">Reference</div>
               <div class="process-icon bg-white border-primary"></div>
@@ -105,15 +105,23 @@
 
           <div class="row">
             <div class="col-md">
-              <div class="mb-3">
-                <label for="pinfo-email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="pinfo-email" placeholder="Enter email..." name="email"
-                  required />
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback invalid-pinfo">
-                  Please fill out this field.
+              <div id="pinfo-email-list">
+                <div class="mb-3">
+                  <label for="pinfo-email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="pinfo-email" placeholder="Enter email..." name="email[]"
+                    required />
+                  <div class="valid-feedback">Valid.</div>
+                  <div class="invalid-feedback invalid-pinfo">
+                    Please fill out this field.
+                  </div>
                 </div>
               </div>
+              <button type="button" class="btn btn-secondary btn-sm mb-3" id="pinfo-add-email">
+                <div class="btn-additem d-flex gap-1 align-items-center">
+                  <p>Add</p>
+                  <i class="fa-solid fa-plus"></i>
+                </div>
+              </button>
             </div>
             <div class="col-md">
               <div id="pinfo-phone-list">
@@ -126,13 +134,25 @@
                     Please fill out this field.
                   </div>
                 </div>
+
+                <!-- <div class="d-flex mb-3 align-items-center gap-2">
+                  <div class="flex-grow-1">
+                    <input type="tel" class="form-control" id="pinfo-phone" placeholder="Enter phone number..."
+                      name="phone[]" required />
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">
+                      Please fill out this field.
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close" aria-label="Close" id="del-phonexx"></button>
+                </div> -->
               </div>
-              <!-- <button type="button" class="btn btn-secondary btn-sm mb-3" id="pinfo-add-phone">
+              <button type="button" class="btn btn-secondary btn-sm mb-3" id="pinfo-add-phone">
                 <div class="btn-additem d-flex gap-1 align-items-center">
                   <p>Add</p>
                   <i class="fa-solid fa-plus"></i>
                 </div>
-              </button> -->
+              </button>
             </div>
           </div>
 
@@ -215,7 +235,8 @@
           </div>
 
           <div class="mb-3">
-            <label for="pinfo-image" class="form-label">Profile picture (accepted extension: .jpg, .jpeg, .png)</label>
+            <label for="pinfo-image" class="form-label">Profile picture (accepted extension: .jpg, .jpeg,
+              .png)</label>
             <input class="form-control" type="file" id="pinfo-image" name="profile-img" accept=".jpg, .jpeg, .png" />
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-pinfo">
@@ -287,7 +308,7 @@
 
         <div id="skills" class="container tab-pane fade">
           <br />
-          <h1 class="mb-3">Skills</h1>
+          <h1 class="mb-3">Skill</h1>
           <p class="mb-4">Show your recruiter your skillsets (maximum 5)</p>
           <div id="skills-list"></div>
           <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-skills">
