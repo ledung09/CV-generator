@@ -17,6 +17,7 @@ var cityData = []
 
 const countries = document.getElementById('countries')
 const cities = document.getElementById('cities')
+const citiesInput = document.getElementById('pinfo-city')
 
 const countryXhttp = new XMLHttpRequest();
 countryXhttp.open("GET", "./data/countries.json", true);
@@ -74,21 +75,44 @@ function validatePinfoInput() {
   else if (phone.length > 20) warningExp(pInfoPhone, invalidPinfoFeeds[3], false, 'Maximum 20 characters!', 'pinfo', 'pinfo-nav-link')
   else if (!phoneRegex.test(phone.trim())) warningExp(pInfoPhone, invalidPinfoFeeds[3], false, 'Invalid phone format!', 'pinfo', 'pinfo-nav-link')
 
+  citiesInput.removeAttribute('disabled');
+
   if (country.length === 0) warningExp(pInfoCountry, invalidPinfoFeeds[4], false, 'Do not leave empty!', 'pinfo', 'pinfo-nav-link')
   else if (!countryData.includes(country)) warningExp(pInfoCountry, invalidPinfoFeeds[4], false, 'Type/Select data from the list!', 'pinfo', 'pinfo-nav-link')
 
+
   if (countryData.includes(country)) {
-    const allCity = findObjectByName(allData, country).states
+    var allCity = findObjectByName(allData, country).states.slice()    
     cities.innerHTML = ""
+    
+
+    if (allCity.length === 0) {
+      allCity.push({name: " " })
+
+      citiesInput.setAttribute('disabled', 'true');
+      citiesInput.value = ""
+      city = " "
+    } else {
+      citiesInput.removeAttribute('disabled');
+    }
+  
+    cityData.length = 0
     allCity.forEach((city) => {
       cities.innerHTML += `<option value='${city.name}'>`
       cityData.push(city.name)
     })
+
+
+  } else {
+    cities.innerHTML = ""
   }
+
+
 
   if (city.length === 0) warningExp(pInfoCity, invalidPinfoFeeds[5], false, 'Do not leave empty!', 'pinfo', 'pinfo-nav-link')
   else if (cities.getElementsByTagName('option').length === 0) warningExp(pInfoCity, invalidPinfoFeeds[5], false, 'Type/Select country first!', 'pinfo', 'pinfo-nav-link')
   else if (!cityData.includes(city)) warningExp(pInfoCity, invalidPinfoFeeds[5], false, 'Type/Select data from the list!', 'pinfo', 'pinfo-nav-link')
+
 
   if (addr.length === 0) warningExp(pInfoAddress, invalidPinfoFeeds[6], false, 'Do not leave empty!', 'pinfo', 'pinfo-nav-link')
   else if (addr.length > 150) warningExp(pInfoAddress, invalidPinfoFeeds[6], false, 'Maximum 150 characters!', 'pinfo', 'pinfo-nav-link')
@@ -123,7 +147,6 @@ function validatePinfoFileInput(event) {
     }
   } else {
     warningExp(pInfoProfileImg, invalidPinfoFeeds[7], false, 'Select a file!', 'pinfo', 'pinfo-nav-link')
-    console.log('there')
   }
 }
 
@@ -136,6 +159,7 @@ pInfoCity.addEventListener('keyup', validatePinfoInput)
 pInfoAddress.addEventListener('keyup', validatePinfoInput)
 pInfoProfileImg.addEventListener('change', validatePinfoInput)
 pInfoProfileImg.addEventListener('change', validatePinfoFileInput)
+
 
 
 

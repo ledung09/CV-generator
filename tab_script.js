@@ -19,10 +19,15 @@ function finalSubmitCheck() {
 }
 
 function findObjectByName(arr, targetName) {
-  return arr.find(function(obj) {
+  // Create a shallow copy of the array using slice
+  const arrCopy = arr.slice();
+
+  // Use find on the copied array
+  return arrCopy.find(function(obj) {
     return obj.name === targetName;
   });
 }
+
 
 // Check stat of pill: 1 - done ; -1 - error
 function pillStat(tabID) {
