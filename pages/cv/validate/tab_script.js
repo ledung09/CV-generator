@@ -11,7 +11,7 @@ function finalSubmitCheck() {
   const iconSuccess = document.getElementsByClassName('icon-success');
   const iconDanger = document.getElementsByClassName('icon-danger');
   const finalSubmit = document.getElementById("final-submit")
-  if (iconSuccess && iconSuccess.length === 7 && iconDanger && iconDanger.length === 0) {
+  if (iconSuccess && iconSuccess.length === 1 && iconDanger && iconDanger.length === 0) {
     finalSubmit.classList.remove('disabled')
   } else {
     finalSubmit.classList.add('disabled')

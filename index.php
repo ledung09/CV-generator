@@ -3,6 +3,7 @@
 <?php
   session_start();
 ?>
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,13 +43,21 @@
   </nav>
 
   <?php 
+    // state: -1 - initial, 0 - create, 1 - view/update
+    $state = -1;
+    $id = -1;
+    
     if (isset($_GET['page'])) {
       $page = $_GET['page'];
       if ($page == 'createCV') {
+        $state = 0;
+        include "./pages/cv/cv.php";
+      } else if ($page == 'reviewCV') {
+        if (isset($_GET['id'])) $id = $_GET['id'];
+        $state = 1;
         include "./pages/cv/cv.php";
       } else if ($page == 'manageCVs') {
         include "./pages/manage/manage.php";
-        
       }
     }
   ?>

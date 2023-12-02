@@ -1,4 +1,9 @@
 <link rel="stylesheet" href="./pages/cv/style.css" />
+<?php
+  echo $state;
+  echo $id;
+
+?>
 <main class="my-4">
   <!-- Default -->
   <!-- 
@@ -78,7 +83,7 @@
       </ul>
     </div>
 
-    <form action="action.php" method="post" class="">
+    <form action="action.php" method="post" class="" id="cv-form">
       <div class="tab-content">
         <div id="pinfo" class="container tab-pane active">
           <br />
@@ -345,21 +350,91 @@
           </button>
         </div>
       </div>
-      <div class="w-100 d-flex justify-content-center mt-4">
-        <button type="submit" class="btn btn-primary btn-sm w-100 disabled" id="final-submit">
+
+      <div class="<?php echo $state == 0 ? "d-flex":  "d-none";?> w-100 justify-content-center mt-4">
+        <button type="submit" class="btn btn-primary w-100 disabled" id="final-submit">
           Submit
         </button>
+      </div>
+
+      <div class="row <?php echo $state == 1 ? "d-flex":  "d-none";?>">
+        <div class="col-md">
+          <button type="button" class="btn btn-primary w-100 my-1" id="save-changes" data-bs-toggle="modal"
+            data-bs-target="#saveChangesModal">
+            Save changes
+          </button>
+        </div>
+        <div class="col-md">
+          <button type="button" class="btn btn-danger w-100 my-1" id="cancel-changes" data-bs-toggle="modal"
+            data-bs-target="#cancelChangesModal">
+            Cancel changes
+          </button>
+        </div>
       </div>
     </form>
 
     <!-- Tab panes -->
   </div>
 
+  <!-- Cancel changes modal -->
+  <div class="modal fade" id="cancelChangesModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Cancel changes</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          Do you wish to cancel changes made to the CV?
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            onclick="window.location.href='index.php?page=manageCVs'">Yes</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Save changes modal -->
+  <div class="modal fade" id="saveChangesModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Save changes</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          Do you wish to save changes made to the CV?
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            onclick="handleFormSubmit()">Yes</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script>
+  function handleFormSubmit() {
+    const form = document.getElementById('cv-form')
+    form.submit();
+  }
+  </script>
   <!-- <script>
   const bar = document.getElementById("pwd")
   bar.classList.add("is-invalid")
   bar.classList.remove("is-valid")
-  </script>   -->
+  </script> -->
 
   <script src="./pages/cv/validate/tab_script.js"></script>
   <script src="./pages/cv/validate/pinfo_script.js"></script>
