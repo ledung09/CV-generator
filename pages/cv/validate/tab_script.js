@@ -11,7 +11,7 @@ function finalSubmitCheck() {
   const iconSuccess = document.getElementsByClassName('icon-success');
   const iconDanger = document.getElementsByClassName('icon-danger');
   const finalSubmit = document.getElementById("final-submit")
-  if (iconSuccess && iconSuccess.length === 7 && iconDanger && iconDanger.length === 0) {
+  if (iconSuccess && iconSuccess.length ===1 && iconDanger && iconDanger.length === 0) {
     finalSubmit.classList.remove('disabled')
   } else {
     finalSubmit.classList.add('disabled')
@@ -86,17 +86,17 @@ function warningExp(inputitem, textitem, valid, text, tabID, tabLinkID) {
 }
 
 // Click on show!
-var firstClickFlag = [0, 0, 0, 0, 0, 0, 0]
-const addBtnList = ['job', 'edu', 'cer', 'skills', 'prj', 'ref']
-const navLinkA = document.getElementsByClassName('nav-link-tab')
+// var firstClickFlag = [0, 0, 0, 0, 0, 0, 0]
+// const addBtnList = ['job', 'edu', 'cer', 'skills', 'prj', 'ref']
+// const navLinkA = document.getElementsByClassName('nav-link-tab')
 
-Array.from(navLinkA).forEach((nav, idx) => {
-  if (idx !== 0) {
-    nav.addEventListener('click', () => {
-      if (firstClickFlag[idx] === 0) {
-        document.getElementById(`add-${addBtnList[idx-1]}`).click();
-        firstClickFlag[idx] = 1;
-      }
-    })
-  }
-})
+// Array.from(navLinkA).forEach((nav, idx) => {
+//   if (idx !== 0) {
+//     nav.addEventListener('click', () => {
+//       if (firstClickFlag[idx] === 0) {
+//         document.getElementById(`add-${addBtnList[idx-1]}`).click();
+//         firstClickFlag[idx] = 1;
+//       }
+//     })
+//   }
+// })

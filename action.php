@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Assuming you have a database connection established
 $servername = "localhost";
 $username = "root";
@@ -15,10 +16,10 @@ if ($conn->connect_error) {
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Personal Information
+    $user_id = $_SESSION['user_id'];
     $fullname = $_POST["fname"];
     $professional_title = $_POST["profess"];
     $email = $_POST['email'];
-    $phonenumer = $_POST['phone'];
     $country = $_POST['country'];
     $city = $_POST['city'];
     $address = $_POST['address'];
@@ -41,17 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->close();
         exit();
     }
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "Email sai format";
-        $conn->close();
-        exit();
-    }
-    if (!preg_match("/^[+0-9\s.-]+$/", $phonenumer)) {
-        echo "Phone sai cu phap";
-        $conn->close();
-        exit();
-    }
-    if (!preg_match("/^[a-zA-Z' ]*$/", $country) || !preg_match("/^[a-zA-Z' ]*$/", $city)) {
+    // if (!preg_match("/^\d+$/", $phone_number)) {
+    //     echo "Phone sai cu phap";
+    //     $conn->close();
+    //     exit();
+    // }
+
+    if (!preg_match("/^[a-zA-Z' ]*$/", $country) ) {
         echo "City hoac Country sai cu phap";
         $conn->close();
         exit();  
@@ -97,11 +94,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Insert data into the applicants table using prepared statement
-    $sql = "INSERT INTO applicants (fullname, professional_title, email, phone_number, address, city, country, profile_pic, created_date, updated_date) 
+    $sql = "INSERT INTO applicants (user_id,fullname, professional_title, email, address, city, country, profile_pic, created_date, updated_date) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), CURDATE())";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssss", $fullname, $professional_title, $email, $phonenumer, $address, $city, $country, basename($_FILES["profile-img"]["name"]));
+    $stmt->bind_param("ssssssss", $user_id, $fullname, $professional_title, $email, $address, $city, $country, basename($_FILES["profile-img"]["name"]));
+
 
     if ($stmt->execute()) {
         echo "Record added successfully";

@@ -78,7 +78,7 @@
       </ul>
     </div>
 
-    <form action="action.php" method="post" class="">
+    <form action="action.php" method="post" class=""enctype="multipart/form-data">
       <div class="tab-content">
         <div id="pinfo" class="container tab-pane active">
           <br />
