@@ -1,18 +1,6 @@
 <?php
 session_start();
-// Assuming you have a database connection established
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "btl";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-   
-}
-
+include_once('./db/db_connection.php');
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Personal Information
@@ -23,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $country = $_POST['country'];
     $city = $_POST['city'];
     $address = $_POST['address'];
+    $picname = basename($_FILES["profile-img"]["name"]);
 
     // File Upload
     $targetDir = "uploads/";  
@@ -93,12 +82,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Insert data into the applicants table using prepared statement
     $sql = "INSERT INTO applicants (user_id,fullname, professional_title, email, address, city, country, profile_pic, created_date, updated_date) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), CURDATE())";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssss", $user_id, $fullname, $professional_title, $email, $address, $city, $country, basename($_FILES["profile-img"]["name"]));
+    $stmt->bind_param("ssssssss", $user_id, $fullname, $professional_title, $email, $address, $city, $country, $picname);
 
 
     if ($stmt->execute()) {

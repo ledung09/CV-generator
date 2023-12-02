@@ -4,18 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Login</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Set a light background color */
+        }
+
+        .login-container {
+            max-width: 400px; /* Set a maximum width for the container */
+            margin: auto; /* Center the container horizontally */
+            margin-top: 100px; /* Add some top margin for better spacing */
+        }
+
+        .card {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+        }
+    </style>
 </head>
 <body>
 
-<h2>User Login</h2>
+<div class="container login-container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="text-center mb-4">User Login</h2>
+            <form method="post" action="signin.php">
+                <!-- Input fields for login -->
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" class="form-control" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-<form method="post" action="signin.php">
-    <!-- Input fields for login -->
-    Username: <input type="text" name="username" required><br>
-    Password: <input type="password" name="password" required><br>
-
-    <input type="submit" value="Login">
-</form>
+<!-- Bootstrap JS and Popper.js CDN (for optional Bootstrap features) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>
