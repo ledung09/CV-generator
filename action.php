@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_SESSION['user_id'];
     $fullname = $_POST["fname"];
     $professional_title = $_POST["profess"];
-    $email = $_POST['email'];
     $country = $_POST['country'];
     $city = $_POST['city'];
     $address = $_POST['address'];
@@ -18,7 +17,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $targetFile = $targetDir . basename($_FILES["profile-img"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+    //get cv id
+    $getCVIdQuery = "SELECT cv_id FROM cv_management WHERE user_id = '$user_id'";
+    $cvResult = mysqli_query($conn, $getCVIdQuery);
 
+    if ($cvResult && mysqli_num_rows($cvResult) > 0) {
+        $cvRow = mysqli_fetch_assoc($cvResult);
+        $cv_id = $cvRow['cv_id'];
+
+        // Use $cv_id as needed in your application
+
+    }
 
     // Server-side validation
     if (!preg_match("/^[a-zA-Z' ]*$/", $fullname)) {
@@ -82,11 +91,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    $sql = "INSERT INTO applicants (user_id,fullname, professional_title, email, address, city, country, profile_pic, created_date, updated_date) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), CURDATE())";
+    $sql = "INSERT INTO pinfo (cv_id, fullname, professional_title, address, city, country, profile_pic) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssss", $user_id, $fullname, $professional_title, $email, $address, $city, $country, $picname);
+    $stmt->bind_param("issssss", $cv_id, $fullname, $professional_title, $address, $city, $country, $picname);
+
+
 
 
     if ($stmt->execute()) {
@@ -95,30 +106,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error: " . $sql . "<br>" . $stmt->error;
     }
     $stmt->close();
+    // //phone number
+    // $getApplicantIdQuery = "SELECT applicant_id FROM applicants WHERE user_id = '$user_id'";
+    // $result = mysqli_query($conn, $getApplicantIdQuery);
+    // if ($result) {
+    //     // Check if any rows were returned
+    //     if (mysqli_num_rows($result) > 0) {
+    //         $row = mysqli_fetch_assoc($result);
+    //         $applicant_id = $row['applicant_id'];
+    //         $phone_numbers = $_POST['phone'];
 
-    //phone number
-    $getApplicantIdQuery = "SELECT applicant_id FROM applicants WHERE user_id = '$user_id'";
-    $result = mysqli_query($conn, $getApplicantIdQuery);
-    if ($result) {
-        // Check if any rows were returned
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            $applicant_id = $row['applicant_id'];
-            $phone_numbers = $_POST['phone'];
-
-            foreach ($phone_numbers as $phone) {
-                $phone = mysqli_real_escape_string($conn, $phone);
-                $insertQuery = "INSERT INTO phone_number (applicant_id, phone_number) VALUES ('$applicant_id', '$phone')";
+    //         foreach ($phone_numbers as $phone) {
+    //             $phone = mysqli_real_escape_string($conn, $phone);
+    //             $insertQuery = "INSERT INTO phone_number (applicant_id, phone_number) VALUES ('$applicant_id', '$phone')";
                 
-                if (!mysqli_query($conn, $insertQuery)) {
-                    echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
-                    exit();
-                }
-            }
-            echo "Phone numbers inserted successfully";
-            echo "Applicant ID for user_id $user_id is: $applicant_id";           
-        }
-    }
+    //             if (!mysqli_query($conn, $insertQuery)) {
+    //                 echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+    //                 exit();
+    //             }
+    //         }
+    //         echo "Phone numbers inserted successfully";
+    //         echo "Applicant ID for user_id $user_id is: $applicant_id";           
+    //     }
+    // }
 
 
 }
