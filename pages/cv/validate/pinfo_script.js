@@ -261,6 +261,101 @@ addMedia.addEventListener('click', () => {
 
 // Verify media inputs
 
+// Addp phone number
+
+var phoneID = 0;
+const addPhoneBtn = document.getElementById('pinfo-add-phone')
+const phoneList = document.getElementById('pinfo-phone-list')
+addPhoneBtn.addEventListener('click', () => {
+  phoneID++;
+  var newPhoneItem = document.createElement('div');
+  newPhoneItem.className = 'd-flex mb-3 align-items-start gap-2 phone-card'; // Set the desired class name
+  newPhoneItem.innerHTML = `
+    <div class="flex-grow-1">
+      <input type="tel" class="form-control" id="pinfo-phone${phoneID}" placeholder="Enter phone number..." name="phone[]" required />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback" id="pinfo-phone-feed${phoneID}">Please fill out this field.</div>
+    </div>
+    <button type="button" class="btn-close mt-2" aria-label="Close" id="del-phone${phoneID}"></button>
+  `;
+
+  // Append the newPhoneItem to the phoneList
+  phoneList.appendChild(newPhoneItem);
+  const phoneCard = document.getElementsByClassName('phone-card')
+  if (phoneCard.length === 4) addPhoneBtn.style.display = 'none'
+
+  const phoneInput = document.getElementById(`pinfo-phone${phoneID}`)
+  const phoneFeeed = document.getElementById(`pinfo-phone-feed${phoneID}`)
+
+  function validatePhoneInput() {
+    var phoneInputVal = phoneInput.value;
+
+    if (phoneInputVal.length === 0) warningExp(phoneInput, phoneFeeed, false, 'Do not leave any field empty!', 'pinfo', 'pinfo-nav-link')
+    else if (phoneInputVal.length < 4) warningExp(phoneInput, phoneFeeed, false, 'Minimum 4 characters!', 'pinfo', 'pinfo-nav-link')
+    else if (phoneInputVal.length > 20) warningExp(phoneInput, phoneFeeed, false, 'Maximum 20 characters!', 'pinfo', 'pinfo-nav-link')
+    else if (!phoneRegex.test(phoneInputVal.trim())) warningExp(phoneInput, phoneFeeed, false, 'Invalid phone number format!', 'pinfo', 'pinfo-nav-link')
+    else warningExp(phoneInput, phoneFeeed, true, '', 'pinfo', 'pinfo-nav-link')
+    validatePinfoInput();
+  }
+  
+  phoneInput.addEventListener('keyup', validatePhoneInput)
+  validatePhoneInput()
+
+  const delPhoneBtn = document.getElementById(`del-phone${phoneID}`)
+  delPhoneBtn.addEventListener('click', (e) => {
+    e.target.parentNode.parentNode.removeChild(e.target.parentNode)
+    if (phoneCard.length < 4) addPhoneBtn.style.display = 'flex'
+    validatePinfoInput();
+  })
+})
+
+
+// Add email
+var emailID = 0;
+const addEmailBtn = document.getElementById('pinfo-add-email')
+const emailList = document.getElementById('pinfo-email-list')
+addEmailBtn.addEventListener('click', () => {
+  emailID++;
+  var newEmailItem = document.createElement('div');
+  newEmailItem.className = 'd-flex mb-3 align-items-start gap-2 email-card'; // Set the desired class name
+  newEmailItem.innerHTML = `
+    <div class="flex-grow-1">
+      <input type="email" class="form-control" id="pinfo-email${emailID}" placeholder="Enter email..." name="email[]" required />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback" id="pinfo-email-feed${emailID}">Please fill out this field.</div>
+    </div>
+    <button type="button" class="btn-close mt-2" aria-label="Close" id="del-email${emailID}"></button>
+  `;
+
+  // Append the newEmailItem to the emailList
+  emailList.appendChild(newEmailItem);
+  const emailCard = document.getElementsByClassName('email-card')
+  if (emailCard.length === 4) addEmailBtn.style.display = 'none'
+  
+  const emailInput = document.getElementById(`pinfo-email${emailID}`)
+  const emailFeeed = document.getElementById(`pinfo-email-feed${emailID}`)
+
+  function validateEmailInput() {
+    var phoneEmailVal = emailInput.value;
+
+    if (phoneEmailVal.length === 0) warningExp(emailInput, emailFeeed, false, 'Do not leave any field empty!', 'pinfo', 'pinfo-nav-link')
+    else if (phoneEmailVal.length > 255) warningExp(emailInput, emailFeeed, false, 'Maximum 255 characters!', 'pinfo', 'pinfo-nav-link')
+    else if (!emailRegex.test(phoneEmailVal.trim())) warningExp(emailInput, emailFeeed, false, 'Invalid email format!', 'pinfo', 'pinfo-nav-link')
+    else warningExp(emailInput, emailFeeed, true, '', 'pinfo', 'pinfo-nav-link')
+    validatePinfoInput();
+  }
+  
+  emailInput.addEventListener('keyup', validateEmailInput)
+  validateEmailInput()
+
+  const delEmailBtn = document.getElementById(`del-email${emailID}`)
+  delEmailBtn.addEventListener('click', (e) => {
+    e.target.parentNode.parentNode.removeChild(e.target.parentNode)
+    if (emailCard.length < 4) addEmailBtn.style.display = 'flex'
+    validatePinfoInput();
+  })
+})
+
 
 // Test on open
 finalSubmitCheck();

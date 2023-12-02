@@ -1,6 +1,7 @@
 // SKills tab
 const maxSkills = 5;
 var idSkills = 0;
+var skillNameID = 0;
 
 const skillList = document.getElementById("skills-list");
 const addSkills = document.getElementById("add-skills");
@@ -13,6 +14,16 @@ const skillsTitle = document.getElementsByClassName("skills-title");
 function updateSkillInfo() {
   for (var i = 0; i < skillsTitle.length; i++)
     skillsTitle[i].innerHTML = `Skillset #${i + 1}`;
+
+  const skillNameInp = document.getElementsByClassName('skill-name-inp')  
+  console.log(skillNameInp.length)
+  for (var i=0; i < skillsCards.length; i++) {
+    Array.from(skillNameInp).forEach((inp) => {
+      inp.name = `skills-name[${i}][]`
+    })
+  }
+  // Update when add/ delete
+  // Skill name list update!
 }
 
 addSkills.addEventListener("click", () => {
@@ -33,11 +44,21 @@ addSkills.addEventListener("click", () => {
         <div class="valid-feedback">Valid.</div>
         <div class="invalid-feedback invalid-skills-feedback${idSkills}">Please fill out this field.</div>
       </div>
-      <div class="mb-3">
-        <label for="skills-name${idSkills}" class="form-label">Skills name (seperate by ,)</label>
-        <input type="text" class="form-control" id="skills-name${idSkills}" placeholder="Enter skills name..." name="skills-name[]" required>
-        <div class="valid-feedback">Valid.</div>
-        <div class="invalid-feedback invalid-skills-feedback${idSkills}">Please fill out this field.</div>
+      <div className="mb-3">
+        <div id="skills-name-list${idSkills}">
+          <div class="mb-3">
+            <label for="skills-name${idSkills}" class="form-label">Skills name</label>
+            <input type="text" class="form-control skill-name-inp" id="skills-name${idSkills}" placeholder="Enter skill name..." name="skills-name[][]" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback invalid-skills-feedback${idSkills}">Please fill out this field.</div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="skills-add-name${idSkills}">
+          <div class="btn-additem d-flex gap-1 align-items-center">
+            <p>Add</p>
+            <i class="fa-solid fa-plus"></i>
+          </div>
+        </button>
       </div>
     </div>
   `;
@@ -98,12 +119,12 @@ addSkills.addEventListener("click", () => {
         "skills",
         "skills-nav-link"
       );
-    else if (value2.length > 250)
+    else if (value2.length > 100)
       warningExp(
         inp2,
         invalidFeeds[1],
         false,
-        "Maximum 250 characters!",
+        "Maximum 100 characters!",
         "skills",
         "skills-nav-link"
       );
@@ -137,4 +158,54 @@ addSkills.addEventListener("click", () => {
     // Verify status when deleting
     pillVerify("skills", "skills-nav-link");
   });
+
+  const addSkillNameBtn = document.getElementById(`skills-add-name${idSkills}`)
+  const skillNameList = document.getElementById(`skills-name-list${idSkills}`)
+
+  addSkillNameBtn.addEventListener('click', () => {
+    skillNameID++;
+    var newSkillNameItem = document.createElement('div');
+    newSkillNameItem.className = `d-flex mb-3 align-items-start gap-2 skill-name-card${skillNameID}`; // Set the desired class name
+    newSkillNameItem.innerHTML = `
+      <div class="flex-grow-1">
+        <input type="text" class="form-control skill-name-inp" id="skill-namess${skillNameID}" placeholder="Enter skill name..." name="skills-name[][]" required />
+        <div class="valid-feedback">Valid.</div>
+        <div class="invalid-feedback" id="skill-namess-feed${skillNameID}">Please fill out this field.</div>
+      </div>
+      <button type="button" class="btn-close mt-2" aria-label="Close" id="del-skillNamess${skillNameID}"></button>
+    `;
+
+    // Append the newSkillNameItem to the skillNameList
+    skillNameList.appendChild(newSkillNameItem);
+    const skillNameCard = document.getElementsByClassName(`skill-name-card${skillNameID}`)
+    if (skillNameCard.length === 4) addSkillNameBtn.style.display = 'none'
+    
+    const skillNamesInput = document.getElementById(`skill-namess${skillNameID}`)
+    const skillNamesFeeed = document.getElementById(`skill-namess-feed${skillNameID}`)
+
+    function validateSkillNamesInput() {
+      var skillsnamesVal = skillNamesInput.value;
+
+      if (skillsnamesVal.length === 0) warningExp(skillNamesInput, skillNamesFeeed, false, 'Do not leave any field empty!', "skills", "skills-nav-link")
+      else if (skillsnamesVal.length > 100) warningExp(skillNamesInput, skillNamesFeeed, false, 'Maximum 100 characters!', "skills", "skills-nav-link")
+      else if (!skillRegex.test(skillsnamesVal.trim())) warningExp(skillNamesInput, skillNamesFeeed, false, 'Invalid email format!', "skills", "skills-nav-link")
+      else warningExp(skillNamesInput, skillNamesFeeed, true, '', "skills", "skills-nav-link")
+      validateSkillsInput();
+    }
+    
+    skillNamesInput.addEventListener('keyup', validateSkillNamesInput)
+    validateSkillNamesInput()
+
+    const delSkillsNamesBtn = document.getElementById(`del-skillNamess${skillNameID}`)
+    delSkillsNamesBtn.addEventListener('click', (e) => {
+      e.target.parentNode.parentNode.removeChild(e.target.parentNode)
+      if (skillNameCard.length < 4) addSkillNameBtn.style.display = 'flex'
+      validateSkillsInput();
+    })
+    updateSkillInfo();
+    console.log('x')
+  })
 });
+
+
+// Add skills

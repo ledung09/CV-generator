@@ -84,3 +84,19 @@ function warningExp(inputitem, textitem, valid, text, tabID, tabLinkID) {
   }
   pillVerify(tabID, tabLinkID)
 }
+
+// Click on show!
+var firstClickFlag = [0, 0, 0, 0, 0, 0, 0]
+const addBtnList = ['job', 'edu', 'cer', 'skills', 'prj', 'ref']
+const navLinkA = document.getElementsByClassName('nav-link-tab')
+
+Array.from(navLinkA).forEach((nav, idx) => {
+  if (idx !== 0) {
+    nav.addEventListener('click', () => {
+      if (firstClickFlag[idx] === 0) {
+        document.getElementById(`add-${addBtnList[idx-1]}`).click();
+        firstClickFlag[idx] = 1;
+      }
+    })
+  }
+})

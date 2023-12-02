@@ -24,10 +24,10 @@
       <div class="collapse navbar-collapse" id="mynavbar">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="./index.php?page=addcv">Add CV</a>
+            <a class="nav-link" href="./index.php?page=manageCVs">Manage CVs</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)">Link</a>
+            <a class="nav-link" href="./index.php?page=createCV">Create CV</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)">Generate CV</a>
@@ -44,8 +44,11 @@
   <?php 
     if (isset($_GET['page'])) {
       $page = $_GET['page'];
-      if ($page == 'addcv') {
+      if ($page == 'createCV') {
         include "./pages/cv/cv.php";
+      } else if ($page == 'manageCVs') {
+        include "./pages/manage/manage.php";
+        
       }
     }
   ?>
