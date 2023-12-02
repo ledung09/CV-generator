@@ -82,7 +82,7 @@
       <div class="tab-content">
         <div id="pinfo" class="container tab-pane active">
           <br />
-          <h1 class="mb-3">Personal Information</h1>
+          <h2 class="mb-3">Personal Information</h2>
           <p class="mb-4">Fill in your personal information below!</p>
           <div class="mb-3 mt-3">
             <label for="pinfo-fname" class="form-label">Fullname:</label>
@@ -269,7 +269,7 @@
 
         <div id="exp" class="container tab-pane fade">
           <br />
-          <h1 class="mb-3">Experience</h1>
+          <h2 class="mb-3">Experience</h2>
           <p class="mb-4">Show your recruiter your experience (maximum 5)</p>
           <div id="job-list"></div>
           <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-job">
@@ -282,7 +282,7 @@
 
         <div id="edu" class="container tab-pane fade">
           <br />
-          <h1 class="mb-3">Education</h1>
+          <h2 class="mb-3">Education</h2>
           <p class="mb-4">Show your recruiter your education (maximum 5)</p>
           <div id="edu-list"></div>
           <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-edu">
@@ -295,7 +295,7 @@
 
         <div id="cer" class="container tab-pane fade">
           <br />
-          <h1 class="mb-3">Certificate</h1>
+          <h2 class="mb-3">Certificate</h2>
           <p class="mb-4">Show your recruiter your certificate (maximum 5)</p>
           <div id="cer-list"></div>
           <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-cer">
@@ -308,7 +308,7 @@
 
         <div id="skills" class="container tab-pane fade">
           <br />
-          <h1 class="mb-3">Skill</h1>
+          <h2 class="mb-3">Skill</h2>
           <p class="mb-4">Show your recruiter your skillsets (maximum 5)</p>
           <div id="skills-list"></div>
           <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-skills">
@@ -321,7 +321,7 @@
 
         <div id="prj" class="container tab-pane fade">
           <br />
-          <h1 class="mb-3">Project</h1>
+          <h2 class="mb-3">Project</h2>
           <p class="mb-4">Show your recruiter your project (maximum 5)</p>
           <div id="prj-list"></div>
           <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-prj">
@@ -334,7 +334,7 @@
 
         <div id="ref" class="container tab-pane fade">
           <br />
-          <h1 class="mb-3">Reference</h1>
+          <h2 class="mb-3">Reference</h2>
           <p class="mb-4">Show your recruiter your reference (maximum 5)</p>
           <div id="ref-list"></div>
           <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-ref">
