@@ -33,7 +33,8 @@
           <div class="d-flex flex-column flex-md-row gap-2">
             <button onclick="window.location.href='index.php?page=reviewCV&id='" type=" button"
               class="btn btn-primary btn-sm">View/Update</button>
-            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+              data-bs-target="#deleteCVModal">Delete</button>
           </div>
         </td>
       </tr>
@@ -45,8 +46,8 @@
           <div class="d-flex flex-column flex-md-row gap-2">
             <button onclick="window.location.href='index.php?page=reviewCV&id='" type=" button"
               class="btn btn-primary btn-sm">View/Update</button>
-            <button onclick="window.location.href='index.php?page=reviewCV&id='" type=" button" <button type="button"
-              class="btn btn-danger btn-sm">Delete</button>
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+              data-bs-target="#deleteCVModal">Delete</button>
           </div>
         </td>
       </tr>
@@ -58,10 +59,34 @@
           <div class="d-flex flex-column flex-md-row gap-2">
             <button onclick="window.location.href='index.php?page=reviewCV&id='" type=" button"
               class="btn btn-primary btn-sm">View/Update</button>
-            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+              data-bs-target="#deleteCVModal">Delete</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
 </main>
+
+<!-- Delete CV modal -->
+<div class="modal fade" id="deleteCVModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Delete CV</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        Do you wish to delete this CV?
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Yes</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+      </div>
+
+    </div>
+  </div>
+</div>

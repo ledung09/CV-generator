@@ -16,7 +16,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark" style="z-index: 2000;">
     <div class="container">
       <a class="navbar-brand" href="./index.php">Logo</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
@@ -58,8 +58,10 @@
         include "./pages/cv/cv.php";
       } else if ($page == 'manageCVs') {
         include "./pages/manage/manage.php";
+      } else {
+        include "./pages/error/error.php";
       }
-    }
+    } 
   ?>
 
 
