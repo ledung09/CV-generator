@@ -94,8 +94,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "Error: " . $sql . "<br>" . $stmt->error;
     }
-
     $stmt->close();
+
+    //phone number
+    $getApplicantIdQuery = "SELECT applicant_id FROM applicants WHERE user_id = '$user_id'";
+    $result = mysqli_query($conn, $getApplicantIdQuery);
+    if ($result) {
+        // Check if any rows were returned
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $applicant_id = $row['applicant_id'];
+            $phone_numbers = $_POST['phone'];
+
+            foreach ($phone_numbers as $phone) {
+                $phone = mysqli_real_escape_string($conn, $phone);
+                $insertQuery = "INSERT INTO phone_number (applicant_id, phone_number) VALUES ('$applicant_id', '$phone')";
+                
+                if (!mysqli_query($conn, $insertQuery)) {
+                    echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                    exit();
+                }
+            }
+            echo "Phone numbers inserted successfully";
+            echo "Applicant ID for user_id $user_id is: $applicant_id";           
+        }
+    }
+
+
 }
 
 $conn->close();

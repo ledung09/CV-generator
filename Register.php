@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Registration</title>
- 
+    <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -12,13 +12,13 @@
         }
 
         .registration-container {
-            max-width: 400px; 
-            margin: auto; 
-            margin-top: 100px; 
+            max-width: 400px; /* Set a maximum width for the container */
+            margin: auto; /* Center the container horizontally */
+            margin-top: 100px; /* Add some top margin for better spacing */
         }
 
         .card {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
         }
     </style>
 </head>
