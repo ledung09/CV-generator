@@ -1,4 +1,11 @@
 <link rel="stylesheet" href="./pages/cv/style.css" />
+<?php 
+  if (!isset($_SESSION['user_id'])) {
+    include "./pages/error/error401.php";
+  } else {
+
+?>
+
 <?php
   // echo $state;
   // echo $id;
@@ -70,7 +77,7 @@
       </ul>
     </div>
 
-    <form action="action.php" method="post" class="" id="cv-form" enctype = "multipart/form-data">
+    <form action="action.php" method="post" class="" id="cv-form" enctype="multipart/form-data">
       <?php
         if ($state == 0) {
       ?>
@@ -890,6 +897,7 @@ navLinkA[0].click();
 </script>
 
 <?php 
+      }
+    }
   }
-}
 ?>

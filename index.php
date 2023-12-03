@@ -18,7 +18,12 @@
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark" style="z-index: 2000;">
     <div class="container">
-      <a class="navbar-brand" href="./index.php">Logo</a>
+      <a class="navbar-brand me-4" href="./index.php">
+        <div class="d-flex flex-column gap-1 align-items-center">
+          <i class="fa-regular fa-file-code"></i>
+          <p style="font-size: 8px;">CVgens</p>
+        </div>
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -34,10 +39,28 @@
             <a class="nav-link" href="javascript:void(0)">Generate CV</a>
           </li>
         </ul>
-        <a class="navbar-brand" href="#">
-          <img src="./image/avatar.jpg" alt="Logo" style="width:40px;" class="rounded-pill">
-        </a>
+        <?php 
+          if (isset($_SESSION['user_id'])) {
+        ?>
+        <div class="d-flex align-items-center gap-3 my-sm-0 mt-2 mb-1">
+          <div class="navbar-brand m-0" href="#">
+            <img src="./image/avatar.jpg" alt="Logo" style="width:40px;" class="rounded-pill">
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="window.location.href='/pages/auth/signout.php'">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
 
+        <?php
+          } else {
+        ?>
+        <div class="d-flex align-items-center gap-3 my-sm-0 mt-2 mb-1">
+          <button class="btn btn-primary btn-sm" onclick="window.location.href='/index.php?page=login'">Login</button>
+          <button class="btn btn-warning btn-sm">Register</button>
+        </div>
+        <?php
+          }
+          ?>
       </div>
     </div>
   </nav>
@@ -58,6 +81,9 @@
         include "./pages/cv/cv.php";
       } else if ($page == 'manageCVs') {
         include "./pages/manage/manage.php";
+      } else if ($page == 'login') {
+        header('Location: ./pages/auth/signin.php');
+        exit;
       } else {
         include "./pages/error/error404.php";
       }

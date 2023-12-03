@@ -1,3 +1,10 @@
+<?php 
+  if (!isset($_SESSION['user_id'])) {
+    include "./pages/error/error401.php";
+  } else {
+
+?>
+
 <main class="container my-4">
   <div class="row">
     <div class="col-md d-flex align-items-center">
@@ -84,3 +91,6 @@ function deleteCVHandler(user_id, cv_id) {
 
 }
 </script>
+<?php 
+  }
+?>
