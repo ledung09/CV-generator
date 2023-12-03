@@ -1,10 +1,16 @@
+
 <?php
 session_start();
 include_once('./db/db_connection.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Personal Information
-    $user_id = $_SESSION['user_id'];
+    $user_id = $_SESSION['user_id'];  // Assuming you have started the session
+    $insertCvQuery = "INSERT INTO cv_management (user_id, created_date, updated_date) VALUES ('$user_id', NOW(), NOW())";
+    if (mysqli_query($conn, $insertCvQuery)) {
+        // Step 2: Retrieve the generated cv_id
+        $cv_id = mysqli_insert_id($conn);
+    }
     $fullname = $_POST["fname"];
     $professional_title = $_POST["profess"];
     $country = $_POST['country'];

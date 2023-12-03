@@ -20,32 +20,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insertQuery = "INSERT INTO users (username, password)
                         VALUES ('$username', '$password')";
         
-        // Execute the INSERT query
-        if (mysqli_query($conn, $insertQuery)) {
-            // Retrieve the user_id after successful insertion
-            $getUserIDQuery = "SELECT user_id FROM users WHERE username = '$username'";
-            $result = mysqli_query($conn, $getUserIDQuery);
+        // // Execute the INSERT query
+        // if (mysqli_query($conn, $insertQuery)) {
+        //     // Retrieve the user_id after successful insertion
+        //     $getUserIDQuery = "SELECT user_id FROM users WHERE username = '$username'";
+        //     $result = mysqli_query($conn, $getUserIDQuery);
 
-            if ($result && mysqli_num_rows($result) > 0) {
-                $row = mysqli_fetch_assoc($result);
-                $user_id = $row['user_id'];
+        //     if ($result && mysqli_num_rows($result) > 0) {
+        //         $row = mysqli_fetch_assoc($result);
+        //         $user_id = $row['user_id'];
 
-                // Insert user_id into the 'cv_management' table
-                $insertCVManagementQuery = "INSERT INTO cv_management (user_id, created_date, updated_date)
-                                           VALUES ('$user_id', NOW(), NOW())";
+        //         // Insert user_id into the 'cv_management' table
+        //         $insertCVManagementQuery = "INSERT INTO cv_management (user_id, created_date, updated_date)
+        //                                    VALUES ('$user_id', NOW(), NOW())";
 
-                if (mysqli_query($conn, $insertCVManagementQuery)) {
+                if (mysqli_query($conn,  $insertQuery)) {
                     echo "User registered successfully. User ID: $user_id";
                     header("Location: signin.html?regist_successfully");
                 } else {
                     echo "Error inserting into cv_management: " . mysqli_error($conn);
                 }
-            } else {
-                echo "Error retrieving user_id: " . mysqli_error($conn);
-            }
-        } else {
-            echo "Error inserting user data: " . mysqli_error($conn);
-        }
+        //     } else {
+        //         echo "Error retrieving user_id: " . mysqli_error($conn);
+        //     }
+        // } else {
+        //     echo "Error inserting user data: " . mysqli_error($conn);
+        // }
     }
 
     mysqli_close($conn);
