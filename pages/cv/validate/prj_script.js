@@ -46,7 +46,7 @@ addPrj.addEventListener('click', () => {
       </div>
       <div class="mb-3">
         <label for="prj-link${idPrj}" class="form-label">Project link</label>
-        <input type="email" class="form-control prj-link" id="prj-link${idPrj}" placeholder="Enter project link..." name="prj-link[]" required>
+        <input type="text" class="form-control prj-link" id="prj-link${idPrj}" placeholder="Enter project link..." name="prj-link[]" required>
         <div class="valid-feedback">Valid.</div>
         <div class="invalid-feedback invalid-prj-feedback${idPrj}">Please fill out this field.</div>
       </div>
