@@ -1,15 +1,18 @@
 <?php
 session_start();
+$state = $_POST['state'];
+$CVID_for_review = $_POST['CVID'];
 include_once('./db/db_connection.php');
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
     // Personal Information
-    $user_id = $_SESSION['user_id'];  // Assuming you have started the session
+
     $insertCvQuery = "INSERT INTO cv_management (user_id, created_date, updated_date) VALUES ('$user_id', NOW(), NOW())";
     if (mysqli_query($conn, $insertCvQuery)) {
         // Step 2: Retrieve the generated cv_id
         $cv_id = mysqli_insert_id($conn);
     }
+    $user_id = $_SESSION['user_id'] ;
     $fullname = $_POST["fname"];
     $professional_title = $_POST["profess"];
     $country = $_POST['country'];
@@ -132,262 +135,502 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Sorry, there was an error uploading your file.";
         }
     }
+    //pInfo table
+    if($state == "create"){
+        $sql = "INSERT INTO pinfo (user_id,cv_id, fullname, professional_title, address, city, country, profile_pic) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
 
-    $sql = "INSERT INTO pinfo (user_id,cv_id, fullname, professional_title, address, city, country, profile_pic) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iissssss",$user_id, $cv_id, $fullname, $professional_title, $address, $city, $country, $picname);
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iissssss",$user_id, $cv_id, $fullname, $professional_title, $address, $city, $country, $picname);
-
-    //phone number
-    foreach ($phone_numbers as $phone) {
-        $phone = mysqli_real_escape_string($conn, $phone);
-        $insertQuery = "INSERT INTO phone_number (user_id,cv_id, phone_number) VALUES ('$user_id','$cv_id', '$phone')";
-        
-        if (!mysqli_query($conn, $insertQuery)) {
-            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
-            exit();
-        }
-    }
-    //emails  
-    foreach ($emails as $email) {
-        $email = mysqli_real_escape_string($conn, $email);
-        $insertQuery = "INSERT INTO email (user_id,cv_id, email_address) VALUES ('$user_id','$cv_id', '$email')";
-        
-        if (!mysqli_query($conn, $insertQuery)) {
-            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
-            exit();
-        }
-    }
-    //social media
-    if (isset($_POST['media-link']) && isset($_POST['media-name'])) {
-        $media_link = $_POST['media-link'];
-        $media_name = $_POST['media-name'];
-        foreach ($media_link as $index => $medialink) {
-            $medialink = mysqli_real_escape_string($conn, $medialink);
-            $socialmedia_name = mysqli_real_escape_string($conn, $media_name[$index]);
-        
-            $insertQuery = "INSERT INTO socialmedia_link (user_id,cv_id, socialmedia_name, socialmedia_link) VALUES ('$user_id','$cv_id', '$socialmedia_name', '$medialink')";
+        //phone number
+        foreach ($phone_numbers as $phone) {
+            $phone = mysqli_real_escape_string($conn, $phone);
+            $insertQuery = "INSERT INTO phone_number (user_id,cv_id, phone_number) VALUES ('$user_id','$cv_id', '$phone')";
             
             if (!mysqli_query($conn, $insertQuery)) {
                 echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
                 exit();
             }
         }
-    }
-    
-    //experience
-    if (
-        count($job_title) === count($company_name) &&
-        count($company_name) === count($job_start_date) &&
-        count($job_start_date) === count($job_end_date)
-    ) {
-        // Get the length of the arrays
-        $array_length = count($job_title);
-
-        // Loop through the arrays and insert data into the 'experience' table
-        for ($i = 0; $i < $array_length; $i++) {
-            $current_job_title = mysqli_real_escape_string($conn, $job_title[$i]);
-            $current_company_name = mysqli_real_escape_string($conn, $company_name[$i]);
-            $current_start_date = mysqli_real_escape_string($conn, $job_start_date[$i]);
-            $current_end_date = mysqli_real_escape_string($conn, $job_end_date[$i]);
-
-            $insertQuery = "INSERT INTO experience (user_id,cv_id, company_name, job_title, start_date, end_date) 
-                            VALUES ('$user_id','$cv_id', '$current_company_name', '$current_job_title', '$current_start_date', '$current_end_date')";
-
+        //emails  
+        foreach ($emails as $email) {
+            $email = mysqli_real_escape_string($conn, $email);
+            $insertQuery = "INSERT INTO email (user_id,cv_id, email_address) VALUES ('$user_id','$cv_id', '$email')";
+            
             if (!mysqli_query($conn, $insertQuery)) {
                 echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
                 exit();
             }
         }
-        echo "Experience data inserted successfully";
-    } 
-    //experence description
-    $getExpQuery = "SELECT experience_id FROM experience WHERE cv_id = '$cv_id'";
-    $expResult = mysqli_query($conn, $getExpQuery);
-    
-    if ($expResult && mysqli_num_rows($expResult) > 0) {
-        $expRow = mysqli_fetch_assoc($expResult);
-        $experience_id = $expRow['experience_id'];
-    }
-    
-    $descriptions = $_POST['job-des'];
-    foreach ($descriptions as $description) {
-
-        //$description = mysqli_real_escape_string($conn, $description);
-    
-        // Insert data into the 'experience_description' table
-        $insertQuery = "INSERT INTO experience_description (experience_id, description) VALUES ('$experience_id', '$description')";
-        if (!mysqli_query($conn, $insertQuery)) {
-            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
-            exit();
+        //social media
+        if (isset($_POST['media-link']) && isset($_POST['media-name'])) {
+            $media_link = $_POST['media-link'];
+            $media_name = $_POST['media-name'];
+            foreach ($media_link as $index => $medialink) {
+                $medialink = mysqli_real_escape_string($conn, $medialink);
+                $socialmedia_name = mysqli_real_escape_string($conn, $media_name[$index]);
+            
+                $insertQuery = "INSERT INTO socialmedia_link (user_id,cv_id, socialmedia_name, socialmedia_link) VALUES ('$user_id','$cv_id', '$socialmedia_name', '$medialink')";
+                
+                if (!mysqli_query($conn, $insertQuery)) {
+                    echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                    exit();
+                }
+            }
         }
     }
+    else if($state == "review"){
+        $sql = "UPDATE pinfo SET 
+        fullname = ?,
+        professional_title = ?,
+        address = ?,
+        city = ?,
+        country = ?,
+        profile_pic = ?
+        WHERE cv_id = $CVID_for_review AND user_id = $user_id";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssssii", $fullname, $professional_title, $address, $city, $country, $picname, $cv_id_for_review, $user_id);
+
+        if ($stmt->execute()) {
+            echo "Record updated successfully";
+        } else {
+            echo "Error updating record: " . $stmt->error;
+        }
+    }
+    //experience
+    if($state == "create"){
+        if (
+            count($job_title) === count($company_name) &&
+            count($company_name) === count($job_start_date) &&
+            count($job_start_date) === count($job_end_date)
+        ) {
+            // Get the length of the arrays
+            $array_length = count($job_title);
+
+            // Loop through the arrays and insert data into the 'experience' table
+            for ($i = 0; $i < $array_length; $i++) {
+                $current_job_title = mysqli_real_escape_string($conn, $job_title[$i]);
+                $current_company_name = mysqli_real_escape_string($conn, $company_name[$i]);
+                $current_start_date = mysqli_real_escape_string($conn, $job_start_date[$i]);
+                $current_end_date = mysqli_real_escape_string($conn, $job_end_date[$i]);
+
+                $insertQuery = "INSERT INTO experience (user_id,cv_id, company_name, job_title, start_date, end_date) 
+                                VALUES ('$user_id','$cv_id', '$current_company_name', '$current_job_title', '$current_start_date', '$current_end_date')";
+
+                if (!mysqli_query($conn, $insertQuery)) {
+                    echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                    exit();
+                }
+            }
+            echo "Experience data inserted successfully";
+        }
+            //experence description
+        $getExpQuery = "SELECT experience_id FROM experience WHERE cv_id = '$cv_id'";
+        $expResult = mysqli_query($conn, $getExpQuery);
+        
+        if ($expResult && mysqli_num_rows($expResult) > 0) {
+            $expRow = mysqli_fetch_assoc($expResult);
+            $experience_id = $expRow['experience_id'];
+        }
+        
+        $descriptions = $_POST['job-des'];
+        foreach ($descriptions as $description) {
+
+            //$description = mysqli_real_escape_string($conn, $description);
+        
+            // Insert data into the 'experience_description' table
+            $insertQuery = "INSERT INTO experience_description (experience_id, description) VALUES ('$experience_id', '$description')";
+            if (!mysqli_query($conn, $insertQuery)) {
+                echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                exit();
+            }
+        }
+    } 
+    else if($state == "review"){
+        if (
+            count($job_title) === count($company_name) &&
+            count($company_name) === count($job_start_date) &&
+            count($job_start_date) === count($job_end_date)
+        ) {
+            // Get the length of the arrays
+            $array_length = count($job_title);
+        
+            // Loop through the arrays and update data in the 'experience' table
+            for ($i = 0; $i < $array_length; $i++) {
+                $current_job_title = mysqli_real_escape_string($conn, $job_title[$i]);
+                $current_company_name = mysqli_real_escape_string($conn, $company_name[$i]);
+                $current_start_date = mysqli_real_escape_string($conn, $job_start_date[$i]);
+                $current_end_date = mysqli_real_escape_string($conn, $job_end_date[$i]);
+        
+                // Assuming you have an experience_id for each record
+                $current_experience_id = mysqli_real_escape_string($conn, $experience_ids[$i]);
+        
+                $updateQuery = "UPDATE experience 
+                                SET company_name = '$current_company_name', 
+                                    job_title = '$current_job_title', 
+                                    start_date = '$current_start_date', 
+                                    end_date = '$current_end_date' 
+                                WHERE cv_id = $CVID_for_review AND user_id = $user_id";
+        
+                if (!mysqli_query($conn, $updateQuery)) {
+                    echo "Error: " . $updateQuery . "<br>" . mysqli_error($conn);
+                    exit();
+                }
+            }
+            echo "Experience data updated successfully";
+        }
+        //experence description
+        $getExpQuery = "SELECT experience_id FROM experience WHERE cv_id = '$cv_id'";
+        $expResult = mysqli_query($conn, $getExpQuery);
+        
+        if ($expResult && mysqli_num_rows($expResult) > 0) {
+            $expRow = mysqli_fetch_assoc($expResult);
+            $experience_id = $expRow['experience_id'];
+        }
+        
+        $descriptions = $_POST['job-des'];
+        for ($i = 0; $i < count($descriptions); $i++) {
+            $current_description = mysqli_real_escape_string($conn, $descriptions[$i]);
+        
+            // Assuming you have a unique identifier for each description
+            $current_description_id = mysqli_real_escape_string($conn, $description_ids[$i]);
+        
+            $updateQuery = "UPDATE experience_description 
+                            SET description = '$current_description' 
+                            WHERE description_id = '$current_description_id'";
+        
+            if (!mysqli_query($conn, $updateQuery)) {
+                echo "Error: " . $updateQuery . "<br>" . mysqli_error($conn);
+                exit();
+            }
+        }
+        
+        echo "Experience descriptions updated successfully";
+        
+    }
+
     
 
     //education
-    for ($i = 0; $i < count($edu_des); $i++) {
+    if($state == "create"){
+        for ($i = 0; $i < count($edu_des); $i++) {
 
-        $edu_des_i = mysqli_real_escape_string($conn, $edu_des[$i]);
-        $institution_name_i = mysqli_real_escape_string($conn, $institution_names[$i]);
-        $start_date_i = mysqli_real_escape_string($conn, $start_dates[$i]);
-        $end_date_i = mysqli_real_escape_string($conn, $end_dates[$i]);
-    
-        // Insert data into the 'education' table
-        $insertQuery = "INSERT INTO education (cv_id, edu_des, institution_name, start_date, end_date) VALUES ('$cv_id', '$edu_des_i', '$institution_name_i', '$start_date_i', '$end_date_i')";
-    
-        if (!mysqli_query($conn, $insertQuery)) {
-            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
-            exit();
+            $edu_des_i = mysqli_real_escape_string($conn, $edu_des[$i]);
+            $institution_name_i = mysqli_real_escape_string($conn, $institution_names[$i]);
+            $start_date_i = mysqli_real_escape_string($conn, $start_dates[$i]);
+            $end_date_i = mysqli_real_escape_string($conn, $end_dates[$i]);
+        
+            // Insert data into the 'education' table
+            $insertQuery = "INSERT INTO education (cv_id, edu_des, institution_name, start_date, end_date) VALUES ('$cv_id', '$edu_des_i', '$institution_name_i', '$start_date_i', '$end_date_i')";
+        
+            if (!mysqli_query($conn, $insertQuery)) {
+                echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                exit();
+            }
+        }
+    }else if($state == "review"){
+        for ($i = 0; $i < count($edu_des); $i++) {
+            $current_edu_des = mysqli_real_escape_string($conn, $edu_des[$i]);
+            $current_institution_name = mysqli_real_escape_string($conn, $institution_names[$i]);
+            $current_start_date = mysqli_real_escape_string($conn, $start_dates[$i]);
+            $current_end_date = mysqli_real_escape_string($conn, $end_dates[$i]);
+        
+            // Assuming you have a unique identifier for each education record
+            $current_education_id = mysqli_real_escape_string($conn, $education_ids[$i]);
+        
+            $updateQuery = "UPDATE education 
+                            SET edu_des = '$current_edu_des', 
+                                institution_name = '$current_institution_name', 
+                                start_date = '$current_start_date', 
+                                end_date = '$current_end_date' 
+                            WHERE cv_id = $CVID_for_review AND user_id = $user_id";
+        
+            if (!mysqli_query($conn, $updateQuery)) {
+                echo "Error: " . $updateQuery . "<br>" . mysqli_error($conn);
+                exit();
+            }
         }
     }
     //certification
-    for ($i = 0; $i < count($cer_names); $i++) {
-        $certificate_name = mysqli_real_escape_string($conn, $cer_names[$i]);
-        $certifying_institution = mysqli_real_escape_string($conn, $cer_ins_names[$i]);
-        $certificate_year = mysqli_real_escape_string($conn, $cer_years[$i]);
-        $certificate_link = mysqli_real_escape_string($conn, $cer_links[$i]);
-    
+    if($state == "create"){
+        for ($i = 0; $i < count($cer_names); $i++) {
+            $certificate_name = mysqli_real_escape_string($conn, $cer_names[$i]);
+            $certifying_institution = mysqli_real_escape_string($conn, $cer_ins_names[$i]);
+            $certificate_year = mysqli_real_escape_string($conn, $cer_years[$i]);
+            $certificate_link = mysqli_real_escape_string($conn, $cer_links[$i]);
         
-        $insertQuery = "INSERT INTO certificate (cv_id, certificate_name, certifying_institution, certificate_date, certificate_link, user_id)
-                        VALUES (?, ?, ?, ?, ?, ?)";
-    
-        $stmt = $conn->prepare($insertQuery);
-        $stmt->bind_param("issssi", $cv_id, $certificate_name, $certifying_institution, $certificate_year, $certificate_link, $user_id);
-    
-        if (!$stmt->execute()) {
-            echo "Error: " . $insertQuery . "<br>" . $stmt->error;
-            exit();
+            
+            $insertQuery = "INSERT INTO certificate (cv_id, certificate_name, certifying_institution, certificate_date, certificate_link, user_id)
+                            VALUES (?, ?, ?, ?, ?, ?)";
+        
+            $stmt = $conn->prepare($insertQuery);
+            $stmt->bind_param("issssi", $cv_id, $certificate_name, $certifying_institution, $certificate_year, $certificate_link, $user_id);
+        
+            if (!$stmt->execute()) {
+                echo "Error: " . $insertQuery . "<br>" . $stmt->error;
+                exit();
+            }  
         }
-    
+    }else if($state == "review"){
+        for ($i = 0; $i < count($cer_names); $i++) {
+            $current_certificate_name = mysqli_real_escape_string($conn, $cer_names[$i]);
+            $current_certifying_institution = mysqli_real_escape_string($conn, $cer_ins_names[$i]);
+            $current_certificate_year = mysqli_real_escape_string($conn, $cer_years[$i]);
+            $current_certificate_link = mysqli_real_escape_string($conn, $cer_links[$i]);
+        
+            // Assuming you have a unique identifier for each certificate record
+            $current_certificate_id = mysqli_real_escape_string($conn, $certificate_ids[$i]);
+        
+            $updateQuery = "UPDATE certificate 
+                            SET certificate_name = '$current_certificate_name', 
+                                certifying_institution = '$current_certifying_institution', 
+                                certificate_date = '$current_certificate_year', 
+                                certificate_link = '$current_certificate_link' 
+                            WHERE cv_id = $CVID_for_review AND user_id = $user_id";
+        
+            if (!mysqli_query($conn, $updateQuery)) {
+                echo "Error: " . $updateQuery . "<br>" . mysqli_error($conn);
+                exit();
+            }
+        }
     }
     //Skill
-    $skill_ids = array(); 
+ 
 
-    foreach ($skills_categories as $skill_category) {
-        // Ensure that $skill_category is sanitized and validated as needed
-        $skill_category = mysqli_real_escape_string($conn, $skill_category);
+    if($state == "create"){
+        $skill_ids = array(); 
 
+        foreach ($skills_categories as $skill_category) {
+            // Ensure that $skill_category is sanitized and validated as needed
+            $skill_category = mysqli_real_escape_string($conn, $skill_category);
+    
+            
+            $insertQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
+    
+            $stmt = $conn->prepare($insertQuery);
+            $stmt->bind_param("isi", $cv_id, $skill_category, $user_id);
+    
+            if ($stmt->execute()) {
+                // Get the last inserted skill_id and store it in the array
+                $skill_ids[] = mysqli_insert_id($conn);
+            } else {
+                echo "Error: " . $insertQuery . "<br>" . $stmt->error;
+                exit();
+            }
+        }
+        for ($i = 0; $i < count($skills_names); $i++) {
+            $skill_name = mysqli_real_escape_string($conn, $skills_names[$i]);
         
-        $insertQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
-
-        $stmt = $conn->prepare($insertQuery);
-        $stmt->bind_param("isi", $cv_id, $skill_category, $user_id);
-
-        if ($stmt->execute()) {
-            // Get the last inserted skill_id and store it in the array
-            $skill_ids[] = mysqli_insert_id($conn);
-        } else {
-            echo "Error: " . $insertQuery . "<br>" . $stmt->error;
-            exit();
+            // Assuming $skill_ids is an array containing skill_id values
+            $skill_id = $skill_ids[$i];
+        
+            $insertQuery = "INSERT INTO skillname (skill_id, skill_name) VALUES (?, ?)";
+        
+            $stmt = $conn->prepare($insertQuery);
+            $stmt->bind_param("is", $skill_id, $skill_name);
+        
+            if ($stmt->execute()) {
+                // Insert successful
+            } else {
+                echo "Error: " . $insertQuery . "<br>" . $stmt->error;
+                exit();
+            }
         }
     }
-    foreach ($skills_categories as $index => $skill_category) {
-        
-        $skill_category = mysqli_real_escape_string($conn, $skill_category);
-    
-        
-        $insertSkillQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
-    
-        $stmt = $conn->prepare($insertSkillQuery);
-        $stmt->bind_param("isi", $cv_id, $skill_category, $user_id);
-    
-        if ($stmt->execute()) {
-            
-            $skill_id = mysqli_insert_id($conn);
-            $skill_ids[] = $skill_id; 
-    
+    else if ($state == "review"){
+        $skill_ids = array();
 
-            foreach ($skills_names[$index] as $skill_name) {
+        // Loop through skills_categories to insert or update records in the skill table
+        foreach ($skills_categories as $skill_category) {
+            $skill_category = mysqli_real_escape_string($conn, $skill_category);
 
-                $skill_name = mysqli_real_escape_string($conn, $skill_name);
-    
+            // Check if the record with the current skill_category already exists
+            $checkQuery = "SELECT skill_id FROM skill WHERE cv_id = ? AND skill_type = ? AND user_id = ?";
+            $checkStmt = $conn->prepare($checkQuery);
+            $checkStmt->bind_param("isi", $cv_id, $skill_category, $user_id);
+            $checkStmt->execute();
+            $checkStmt->store_result();
 
-                $insertSkillNameQuery = "INSERT INTO skillname (skill_id, skill_name) VALUES (?, ?)";
-    
-                $stmtSkillName = $conn->prepare($insertSkillNameQuery);
-                $stmtSkillName->bind_param("is", $skill_id, $skill_name);
-    
-                if (!$stmtSkillName->execute()) {
-                    echo "Error: " . $insertSkillNameQuery . "<br>" . $stmtSkillName->error;
+            if ($checkStmt->num_rows > 0) {
+                // Skill record exists, perform update
+                $updateQuery = "UPDATE skill SET cv_id = ?, skill_type = ?, user_id = ? WHERE cv_id = ? AND skill_type = ? AND user_id = ?";
+                $updateStmt = $conn->prepare($updateQuery);
+                $updateStmt->bind_param("isisii", $cv_id, $skill_category, $user_id, $cv_id, $skill_category, $user_id);
+
+                if (!$updateStmt->execute()) {
+                    echo "Error: " . $updateQuery . "<br>" . $updateStmt->error;
                     exit();
                 }
-    
-                $stmtSkillName->close();
+
+                // Get the skill_id and store it in the array
+                $skill_id = $checkStmt->fetch();
+                $skill_ids[] = $skill_id;
+            } else {
+                // Skill record doesn't exist, perform insert
+                $insertQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
+                $insertStmt = $conn->prepare($insertQuery);
+                $insertStmt->bind_param("isi", $cv_id, $skill_category, $user_id);
+
+                if ($insertStmt->execute()) {
+                    // Get the last inserted skill_id and store it in the array
+                    $skill_ids[] = mysqli_insert_id($conn);
+                } else {
+                    echo "Error: " . $insertQuery . "<br>" . $insertStmt->error;
+                    exit();
+                }
             }
-        } else {
-            echo "Error: " . $insertSkillQuery . "<br>" . $stmt->error;
-            exit();
+
+            $checkStmt->close();
         }
-    
+
+        // Loop through skills_names to update records in the skillname table
+        for ($i = 0; $i < count($skills_names); $i++) {
+            $skill_name = mysqli_real_escape_string($conn, $skills_names[$i]);
+            $skill_id = $skill_ids[$i];
+
+            $updateQuery = "UPDATE skillname SET skill_name = ? WHERE skill_id = ?";
+            $updateStmt = $conn->prepare($updateQuery);
+            $updateStmt->bind_param("si", $skill_name, $skill_id);
+
+            if (!$updateStmt->execute()) {
+                echo "Error: " . $updateQuery . "<br>" . $updateStmt->error;
+                exit();
+            }
+        }
+
+
     }
     //project
+    if ($state == "create"){
+        for ($i = 0; $i < count($prj_names); $i++) {
 
-    for ($i = 0; $i < count($prj_names); $i++) {
+            $prj_name = mysqli_real_escape_string($conn, $prj_names[$i]);
+            $prj_year = mysqli_real_escape_string($conn, $prj_years[$i]);
+            $prj_link = mysqli_real_escape_string($conn, $prj_links[$i]);
+            $prj_des = mysqli_real_escape_string($conn, $prj_dess[$i]);
+        
 
-        $prj_name = mysqli_real_escape_string($conn, $prj_names[$i]);
-        $prj_year = mysqli_real_escape_string($conn, $prj_years[$i]);
-        $prj_link = mysqli_real_escape_string($conn, $prj_links[$i]);
-        $prj_des = mysqli_real_escape_string($conn, $prj_dess[$i]);
-    
-
-        $insertQuery = "INSERT INTO project (cv_id, project_name, project_year, description, project_link, user_id) 
-                        VALUES (?, ?, ?, ?, ?, ?)";
-    
-        $stmt = $conn->prepare($insertQuery);
-        $stmt->bind_param("issssi", $cv_id, $prj_name, $prj_year, $prj_des, $prj_link, $user_id);
-    
-        if ($stmt->execute()) {
-            // Get the last inserted project_id
-            $project_id = mysqli_insert_id($conn);
-            $project_ids[] = $project_id; // Store the project_id in the array
-        } else {
-            echo "Error: " . $insertQuery . "<br>" . $stmt->error;
-            exit();
+            $insertQuery = "INSERT INTO project (cv_id, project_name, project_year, description, project_link, user_id) 
+                            VALUES (?, ?, ?, ?, ?, ?)";
+        
+            $stmt = $conn->prepare($insertQuery);
+            $stmt->bind_param("issssi", $cv_id, $prj_name, $prj_year, $prj_des, $prj_link, $user_id);
+        
+            if ($stmt->execute()) {
+                // Get the last inserted project_id
+                $project_id = mysqli_insert_id($conn);
+                $project_ids[] = $project_id; // Store the project_id in the array
+            } else {
+                echo "Error: " . $insertQuery . "<br>" . $stmt->error;
+                exit();
+            }
         }
     }
-    // reference
+    else if ($state == "review"){
+        for ($i = 0; $i < count($prj_names); $i++) {
+            $prj_name = mysqli_real_escape_string($conn, $prj_names[$i]);
+            $prj_year = mysqli_real_escape_string($conn, $prj_years[$i]);
+            $prj_link = mysqli_real_escape_string($conn, $prj_links[$i]);
+            $prj_des = mysqli_real_escape_string($conn, $prj_dess[$i]);
+        
+            // Assuming $project_ids array contains the project_id values you want to update
+        
+            $updateQuery = "UPDATE project SET 
+                            project_name = ?,
+                            project_year = ?,
+                            description = ?,
+                            project_link = ?
+                            WHERE cv_id = $CVID_for_review AND user_id = $user_id";
+        
+            $stmt = $conn->prepare($updateQuery);
+            $stmt->bind_param("ssssi", $prj_name, $prj_year, $prj_des, $prj_link, $project_id);
+        
+            if ($stmt->execute()) {
+                // Update successful
+            } else {
+                echo "Error: " . $updateQuery . "<br>" . $stmt->error;
+                exit();
+            }
+        }
+        
+    }
 
-    if (
-        isset($ref_names, $ref_ins_names, $ref_emails, $ref_phones, $ref_relations) &&
-        is_array($ref_names) &&
-        is_array($ref_ins_names) &&
-        is_array($ref_emails) &&
-        is_array($ref_phones) &&
-        is_array($ref_relations) &&
-        count($ref_names) > 0 &&  
-        count($ref_ins_names) > 0 &&
-        count($ref_emails) > 0 &&
-        count($ref_phones) > 0 &&
-        count($ref_relations) > 0
-    ) {
-        // Iterate over the arrays
+    // reference
+    if ($state == "create"){
+        if (
+            isset($ref_names, $ref_ins_names, $ref_emails, $ref_phones, $ref_relations) &&
+            is_array($ref_names) &&
+            is_array($ref_ins_names) &&
+            is_array($ref_emails) &&
+            is_array($ref_phones) &&
+            is_array($ref_relations) &&
+            count($ref_names) > 0 &&  
+            count($ref_ins_names) > 0 &&
+            count($ref_emails) > 0 &&
+            count($ref_phones) > 0 &&
+            count($ref_relations) > 0
+        ) {
+            // Iterate over the arrays
+            for ($i = 0; $i < count($ref_names); $i++) {
+                
+                $ref_name = mysqli_real_escape_string($conn, $ref_names[$i]);
+                $ref_ins_name = mysqli_real_escape_string($conn, $ref_ins_names[$i]);
+                $ref_email = mysqli_real_escape_string($conn, $ref_emails[$i]);
+                $ref_phone = mysqli_real_escape_string($conn, $ref_phones[$i]);
+                $ref_relation = mysqli_real_escape_string($conn, $ref_relations[$i]);
+
+                // Use a prepared statement to prevent SQL injection
+                $insertQuery = "INSERT INTO reference (cv_id, reference_name, institution_name, ref_email, ref_phone, ref_relation, user_id) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+                $stmt = $conn->prepare($insertQuery);
+                $stmt->bind_param("isssssi", $cv_id, $ref_name, $ref_ins_name, $ref_email, $ref_phone, $ref_relation, $user_id);
+
+                if ($stmt->execute()) {
+                    // Get the last inserted reference_id
+                    $reference_id = mysqli_insert_id($conn);
+                } else {
+                    echo "Error: " . $insertQuery . "<br>" . $stmt->error;
+                    exit();
+                }
+
+
+            }
+        } else {
+            echo "One or more arrays are not properly initialized or are empty.";
+        }
+    }
+    else if ($state == "review"){
         for ($i = 0; $i < count($ref_names); $i++) {
-            
             $ref_name = mysqli_real_escape_string($conn, $ref_names[$i]);
             $ref_ins_name = mysqli_real_escape_string($conn, $ref_ins_names[$i]);
             $ref_email = mysqli_real_escape_string($conn, $ref_emails[$i]);
             $ref_phone = mysqli_real_escape_string($conn, $ref_phones[$i]);
             $ref_relation = mysqli_real_escape_string($conn, $ref_relations[$i]);
-
-            // Use a prepared statement to prevent SQL injection
-            $insertQuery = "INSERT INTO reference (cv_id, reference_name, institution_name, ref_email, ref_phone, ref_relation, user_id) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-            $stmt = $conn->prepare($insertQuery);
-            $stmt->bind_param("isssssi", $cv_id, $ref_name, $ref_ins_name, $ref_email, $ref_phone, $ref_relation, $user_id);
-
+        
+            // Assuming $reference_ids array contains the reference_id values you want to update
+            $reference_id = $reference_ids[$i];
+        
+            $updateQuery = "UPDATE reference SET 
+                            reference_name = ?,
+                            institution_name = ?,
+                            ref_email = ?,
+                            ref_phone = ?,
+                            ref_relation = ?
+                            WHERE cv_id = $CVID_for_review AND user_id = $user_id";
+        
+            $stmt = $conn->prepare($updateQuery);
+            $stmt->bind_param("sssssi", $ref_name, $ref_ins_name, $ref_email, $ref_phone, $ref_relation, $reference_id);
+        
             if ($stmt->execute()) {
-                // Get the last inserted reference_id
-                $reference_id = mysqli_insert_id($conn);
+                // Update successful
             } else {
-                echo "Error: " . $insertQuery . "<br>" . $stmt->error;
+                echo "Error: " . $updateQuery . "<br>" . $stmt->error;
                 exit();
             }
-
-
         }
-    } else {
-        echo "One or more arrays are not properly initialized or are empty.";
+        
     }
 
 
