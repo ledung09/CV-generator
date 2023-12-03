@@ -267,9 +267,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $current_start_date = mysqli_real_escape_string($conn, $job_start_date[$i]);
                 $current_end_date = mysqli_real_escape_string($conn, $job_end_date[$i]);
         
-                // Assuming you have an experience_id for each record
-                $current_experience_id = mysqli_real_escape_string($conn, $experience_ids[$i]);
-        
+                // Assuming you have an experience_id for each record       
                 $updateQuery = "UPDATE experience 
                                 SET company_name = '$current_company_name', 
                                     job_title = '$current_job_title', 
@@ -350,7 +348,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $current_end_date = mysqli_real_escape_string($conn, $end_dates[$i]);
         
             // Assuming you have a unique identifier for each education record
-            $current_education_id = mysqli_real_escape_string($conn, $education_ids[$i]);
         
             $updateQuery = "UPDATE education 
                             SET edu_des = '$current_edu_des', 
@@ -393,7 +390,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $current_certificate_link = mysqli_real_escape_string($conn, $cer_links[$i]);
         
             // Assuming you have a unique identifier for each certificate record
-            $current_certificate_id = mysqli_real_escape_string($conn, $certificate_ids[$i]);
         
             $updateQuery = "UPDATE certificate 
                             SET certificate_name = '$current_certificate_name', 
@@ -461,7 +457,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Check if the record with the current skill_category already exists
             $checkQuery = "SELECT skill_id FROM skill WHERE cv_id = ? AND skill_type = ? AND user_id = ?";
             $checkStmt = $conn->prepare($checkQuery);
-            $checkStmt->bind_param("isi", $cv_id, $skill_category, $user_id);
+            $checkStmt->bind_param("isi", $CVID_for_review , $skill_category, $user_id);
             $checkStmt->execute();
             $checkStmt->store_result();
 
@@ -469,7 +465,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Skill record exists, perform update
                 $updateQuery = "UPDATE skill SET cv_id = ?, skill_type = ?, user_id = ? WHERE cv_id = ? AND skill_type = ? AND user_id = ?";
                 $updateStmt = $conn->prepare($updateQuery);
-                $updateStmt->bind_param("isisii", $cv_id, $skill_category, $user_id, $cv_id, $skill_category, $user_id);
+                $updateStmt->bind_param("isisii", $CVID_for_review , $skill_category, $user_id, $CVID_for_review , $skill_category, $user_id);
 
                 if (!$updateStmt->execute()) {
                     echo "Error: " . $updateQuery . "<br>" . $updateStmt->error;
@@ -483,7 +479,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Skill record doesn't exist, perform insert
                 $insertQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
                 $insertStmt = $conn->prepare($insertQuery);
-                $insertStmt->bind_param("isi", $cv_id, $skill_category, $user_id);
+                $insertStmt->bind_param("isi", $CVID_for_review , $skill_category, $user_id);
 
                 if ($insertStmt->execute()) {
                     // Get the last inserted skill_id and store it in the array
