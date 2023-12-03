@@ -16,7 +16,11 @@ session_start();
 
 <body>
   <main class="row h-100 w-100">
-    <div class="col-md bg-black d-md-block d-none"></div>
+    <div class="col-md bg-black d-md-flex d-none">
+      <img class="hw-100" style="object-fit: contain;"
+        src="https://png.pngtree.com/thumb_back/fh260/background/20191014/pngtree-watercolor-black-white-brush-background-image_319313.jpg"
+        alt="" srcset="">
+    </div>
     <div class="col-md d-flex justify-content-center align-items-center">
       <form action="./signin_processing.php" method="post" class="w-50">
         <h2 class="text-center">Signin to your account</h2>

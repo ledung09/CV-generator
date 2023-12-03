@@ -69,43 +69,35 @@
     if ($_SERVER['REQUEST_URI'] === '/index.php' || $_SERVER['REQUEST_URI'] === '/index.php?page=login') {
   ?>
 
-  <script>
-  var xhttpNews = new XMLHttpRequest();
-
-  xhttpNews.onreadystatechange = function() {
-    if (xhttpNews.readyState == 4 && xhttpNews.status == 200) {
-      // Parse the JSON response
-      var res = xhttpNews.responseText
-      console.log(res);
-    }
-  };
-
-  xhttpNews.open("GET",
-    "https://newsapi.org/v2/everything?q=jobs&from=2023-12-02&sortBy=publishedAt&apiKey=c6f5c93717154916acebbe9030635488",
-    true);
-  xhttpNews.send();
-  </script>
-
   <main class="container mt-4">
     <div class="row">
       <div class="col-md">
-        <div class="px-2 cursor-pointer" onclick="window.location.href=''">
-          <div class="w-100 d-flex justify-content-center mb-3">
-            <img
-              src="data:image/png;base64,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"
-              alt="" style="max-height: 150px;">
+        <div class="px-2">
+          <div class=" d-flex justify-content-center mb-3">
+            <img class="w-100" src="https://www.goodcv.com/images/cv/screenshots/thumbs/en/outstanding_10.png?v=1.0.1"
+              alt="">
           </div>
-          <h5 class="text-center my-2">Dyson solía ser un fabricante de electrodomésticos de alta gama</h5>
+          <!-- <h5 class="text-center my-2">Dyson solía ser un fabricante de electrodomésticos de alta gama</h5>
           <p style="text-align: justify;">Tres anécdotas para arrancar este artículo.\n\nUna. Cuando Dyson lanzó la
             primera versión
             de su
             secador de
             pelo, uno de los medios que se hicieron eco del lanzamiento fue El Confidencial a través del blog</p>
-          <p class="text-end my-2"><em><strong>@authorname</strong></em></p>
+          <p class="text-end my-2"><em><strong>@authorname</strong></em></p> -->
         </div>
       </div>
-      <div class="col-md">aa</div>
-      <div class="col-md">aa</div>
+      <div class="col-md d-flex flex-column align-items-center gap-2">
+        <h1 class="display-1">Create</h1>
+        <h1 class="display-1">Your</h1>
+        <h1 class="display-1">CV</h1>
+        <h1 class="display-1">Today</h1>
+
+
+
+      </div>
+      <div class="col-md">
+        <img class="w-100" src="https://gdoc.io/uploads/University-Student-Resume-Template-web1.jpg" alt="">
+      </div>
     </div>
   </main>
   <?php

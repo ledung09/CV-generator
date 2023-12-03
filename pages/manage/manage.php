@@ -24,7 +24,7 @@
   <p class="my-3">Check out your list of CVs below!</p>
   <?php 
   include_once './db/connect.php';
-  $user_id = 1; // this should be taken from session!
+  $user_id = $_SESSION['user_id']; // this should be taken from session!
   $stmt = $conn->prepare("SELECT * FROM cv_management WHERE user_id = ?");
   $stmt->bind_param("i", $user_id);  // Assuming user_id is an integer, change the "i" if it's a different type
   $stmt->execute();
@@ -73,6 +73,7 @@
 
 <script>
 function deleteCVHandler(user_id, cv_id) {
+  console.log(user_id, cv_id)
   var result = confirm("Do you want to proceed?");
   if (result) {
     var xhr = new XMLHttpRequest();

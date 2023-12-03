@@ -9,7 +9,7 @@
 <?php
   // echo $state;
   // echo $id;
-  $user_id = 1; // take from session
+  $user_id = $_SESSION['user_id']; // take from session
 
 ?>
 <main class="my-4" id="form-wrapper">
@@ -86,6 +86,7 @@
         } else {
       ?>
       <input type="hidden" name="state" value="review">
+      <input type="hidden" name="CVID" value="<?php echo $id; ?>">
       <?php
         }
       ?>
@@ -357,20 +358,20 @@
       </div>
 
       <div class="<?php echo $state == 0 ? "d-flex":  "d-none";?> w-100 justify-content-center mt-4">
-        <button type="submit" class="btn btn-primary w-100 disabled" id="final-submit">
+        <button type="submit" class="btn btn-primary w-100 disabled mb-4" id="final-submit">
           Submit
         </button>
       </div>
 
       <div class="row <?php echo $state == 1 ? "d-flex":  "d-none";?>">
         <div class="col-md">
-          <button type="button" class="btn btn-primary w-100 my-1" id="save-changes" data-bs-toggle="modal"
+          <button type="button" class="btn btn-primary w-100 my-1 mb-4" id="save-changes" data-bs-toggle="modal"
             data-bs-target="#saveChangesModal">
             Save changes
           </button>
         </div>
         <div class="col-md">
-          <button type="button" class="btn btn-danger w-100 my-1" id="cancel-changes" data-bs-toggle="modal"
+          <button type="button" class="btn btn-danger w-100 my-1 mb-4" id="cancel-changes" data-bs-toggle="modal"
             data-bs-target="#cancelChangesModal">
             Cancel changes
           </button>

@@ -75,7 +75,9 @@ session_start();
               href="/pages/auth/signin.php" class="text-primary">Signin</a></u> instead!</p>
       </form>
     </div>
-    <div class="col-md bg-black d-md-block d-none"></div>
+    <div class="col-md bg-black d-md-flex d-none d-flex align-items-center">
+      <img class="w-100" src="https://i.ytimg.com/vi/XyB8GuwWMIs/maxresdefault.jpg" alt="">
+    </div>
   </main>
 
   <script>
