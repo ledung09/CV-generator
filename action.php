@@ -100,16 +100,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    $sql = "INSERT INTO pinfo (cv_id, fullname, professional_title, address, city, country, profile_pic) 
-    VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO pinfo (user_id,cv_id, fullname, professional_title, address, city, country, profile_pic) 
+    VALUES (?, ?, ?, ?, ?, ?, ?,?)";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issssss", $cv_id, $fullname, $professional_title, $address, $city, $country, $picname);
+    $stmt->bind_param("iissssss",$user_id, $cv_id, $fullname, $professional_title, $address, $city, $country, $picname);
 
     //phone number
     foreach ($phone_numbers as $phone) {
         $phone = mysqli_real_escape_string($conn, $phone);
-        $insertQuery = "INSERT INTO phone_number (cv_id, phone_number) VALUES ('$cv_id', '$phone')";
+        $insertQuery = "INSERT INTO phone_number (user_id,cv_id, phone_number) VALUES ('$user_id','$cv_id', '$phone')";
         
         if (!mysqli_query($conn, $insertQuery)) {
             echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //emails  
     foreach ($emails as $email) {
         $email = mysqli_real_escape_string($conn, $email);
-        $insertQuery = "INSERT INTO email (cv_id, email_address) VALUES ('$cv_id', '$email')";
+        $insertQuery = "INSERT INTO email (user_id,cv_id, email_address) VALUES ('$user_id','$cv_id', '$email')";
         
         if (!mysqli_query($conn, $insertQuery)) {
             echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
@@ -134,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $medialink = mysqli_real_escape_string($conn, $medialink);
             $socialmedia_name = mysqli_real_escape_string($conn, $media_name[$index]);
         
-            $insertQuery = "INSERT INTO socialmedia_link (cv_id, socialmedia_name, socialmedia_link) VALUES ('$cv_id', '$socialmedia_name', '$medialink')";
+            $insertQuery = "INSERT INTO socialmedia_link (user_id,cv_id, socialmedia_name, socialmedia_link) VALUES ('$user_id','$cv_id', '$socialmedia_name', '$medialink')";
             
             if (!mysqli_query($conn, $insertQuery)) {
                 echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
@@ -159,8 +159,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $current_start_date = mysqli_real_escape_string($conn, $job_start_date[$i]);
             $current_end_date = mysqli_real_escape_string($conn, $job_end_date[$i]);
 
-            $insertQuery = "INSERT INTO experience (cv_id, company_name, job_title, start_date, end_date) 
-                            VALUES ('$cv_id', '$current_company_name', '$current_job_title', '$current_start_date', '$current_end_date')";
+            $insertQuery = "INSERT INTO experience (user_id,cv_id, company_name, job_title, start_date, end_date) 
+                            VALUES ('$user_id','$cv_id', '$current_company_name', '$current_job_title', '$current_start_date', '$current_end_date')";
 
             if (!mysqli_query($conn, $insertQuery)) {
                 echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);

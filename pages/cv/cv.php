@@ -70,7 +70,7 @@
       </ul>
     </div>
 
-    <form action="action.php" method="post" class="" id="cv-form">
+    <form action="action.php" method="post" class="" id="cv-form" enctype = "multipart/form-data">
       <?php
         if ($state == 0) {
       ?>
