@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Set a light background color */
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+        }
+
+        .app-heading {
+            color: #007bff; /* Set the color to a shade of blue */
+            font-family: 'Arial', sans-serif; /* Specify a font family */
+            font-size: 28px; /* Adjust the font size */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-btn {
+            background-color: #007bff; /* Set the button color to the same shade of blue */
+            color: #fff; /* Set the text color to white */
+        }
+
+        .register-btn {
+            background-color: #28a745; /* Set the button color to a shade of green */
+            color: #fff; /* Set the text color to white */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container main-container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="app-heading">CV Application</h2>
+            
+            <!-- Login button -->
+            <a href="signin.html" class="btn btn-primary btn-block login-btn mb-3">Login</a>
+
+            <!-- Register button -->
+            <a href="Register.php" class="btn btn-success btn-block register-btn">Register</a>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Popper.js CDN (for optional Bootstrap features) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
