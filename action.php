@@ -1,7 +1,7 @@
 <?php
 session_start();
 include_once('./db/db_connection.php');
-// Process form submission
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Personal Information
     $user_id = $_SESSION['user_id'];
@@ -13,6 +13,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $picname = basename($_FILES["profile-img"]["name"]);
     $phone_numbers = $_POST['phone']; //another table
     $emails   = $_POST['email'];        //another table
+    $media_link = $_POST['media-link']; //another table
+    $media_name = $_POST['media-name']; 
 
     // File Upload
     $targetDir = "uploads/";  
@@ -27,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $cvRow = mysqli_fetch_assoc($cvResult);
         $cv_id = $cvRow['cv_id'];
 
-        // Use $cv_id as needed in your application
+
 
     }
 
@@ -120,15 +122,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     //social media
-    // foreach ($media_link as $email) {
-    //     $email = mysqli_real_escape_string($conn, $email);
-    //     $insertQuery = "INSERT INTO email (cv_id, email_address) VALUES ('$cv_id', '$phone')";
+    foreach ($media_link as $index => $medialink) {
+        $medialink = mysqli_real_escape_string($conn, $medialink);
+        $socialmedia_name = mysqli_real_escape_string($conn, $media_name[$index]);
+    
+        $insertQuery = "INSERT INTO socialmedia_link (cv_id, socialmedia_name, socialmedia_link) VALUES ('$cv_id', '$socialmedia_name', '$medialink')";
         
-    //     if (!mysqli_query($conn, $insertQuery)) {
-    //         echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
-    //         exit();
-    //     }
-    // }
+        if (!mysqli_query($conn, $insertQuery)) {
+            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+            exit();
+        }
+    }
+    
+
 
     if ($stmt->execute()) {
         echo "Record added successfully";
