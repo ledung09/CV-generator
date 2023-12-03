@@ -2,10 +2,9 @@
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Include your database connection file
-    include_once('db_connection.php');
 
-    // Get input data from the form
+    include_once('./db/db_connection.php');
+
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -18,10 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Verify the password
         if (password_verify($password, $row['password'])) {
-            // Store the user_id in the session for later use
             $_SESSION['user_id'] = $row['user_id'];
-
-            // Redirect to a page where you can input data to applicants
             header("Location: index.php");
             exit();
         } else {
@@ -31,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "User not found";
     }
 
-    // Close the database connection
+
     mysqli_close($conn);
 }
 ?>

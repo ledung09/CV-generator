@@ -1,27 +1,59 @@
-<?php
-// Include your database connection file
-include_once('db_connection.php');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; 
+        }
 
-// Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get input data from the form
-    $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
+        .registration-container {
+            max-width: 400px; /* Set a maximum width for the container */
+            margin: auto; /* Center the container horizontally */
+            margin-top: 100px; /* Add some top margin for better spacing */
+        }
 
-    // You may want to perform additional validation and sanitation here
+        .card {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+        }
+    </style>
+</head>
+<body>
 
-    // Insert data into the 'users' table
-    $sql = "INSERT INTO users (username, password)
-            VALUES ('$username', '$password')";
+<div class="container registration-container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="text-center mb-4">User Registration</h2>
+            <form method="post" action="register_action.php">
+                <!-- Input fields for registration -->
+                <?php
+                    // Check for error parameter in the URL
+                    if (isset($_GET['error']) && $_GET['error'] === 'username_exists') {
+                        echo '<div class="alert alert-danger" role="alert">Username has already been used. Please choose a different username.</div>';
+                    }
+                    ?>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" class="form-control" name="username" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" name="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-    // Execute the SQL query
-    if (mysqli_query($conn, $sql)) {
-        echo "User registered successfully";
-    } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-    }
+<!-- Bootstrap JS and Popper.js CDN (for optional Bootstrap features) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    // Close the database connection
-    mysqli_close($conn);
-}
-?>
+</body>
+</html>

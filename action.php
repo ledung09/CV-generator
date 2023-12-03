@@ -1,34 +1,42 @@
 <?php
-// Assuming you have a database connection established
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "btl";
+session_start();
+include_once('./db/db_connection.php');
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-   
-}
-
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Personal Information
+    $user_id = $_SESSION['user_id'];
     $fullname = $_POST["fname"];
     $professional_title = $_POST["profess"];
-    $email = $_POST['email'];
-    $phonenumer = $_POST['phone'];
     $country = $_POST['country'];
     $city = $_POST['city'];
     $address = $_POST['address'];
+    $picname = basename($_FILES["profile-img"]["name"]);
+    $phone_numbers = $_POST['phone']; //another table,array
+    $emails   = $_POST['email'];        //another table, array
+
+
+    //experience
+    $job_title  = $_POST['job-title'];        //array
+    $company_name  = $_POST['company-name'];    //array
+    $job_start_date  = $_POST['job-start-date']; //array
+    $job_end_date  = $_POST['job-end-date'];      //array
 
     // File Upload
     $targetDir = "uploads/";  
     $targetFile = $targetDir . basename($_FILES["profile-img"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+    //get cv id
+    $getCVIdQuery = "SELECT cv_id FROM cv_management WHERE user_id = '$user_id'";
+    $cvResult = mysqli_query($conn, $getCVIdQuery);
 
+    if ($cvResult && mysqli_num_rows($cvResult) > 0) {
+        $cvRow = mysqli_fetch_assoc($cvResult);
+        $cv_id = $cvRow['cv_id'];
+
+
+
+    }
 
     // Server-side validation
     if (!preg_match("/^[a-zA-Z' ]*$/", $fullname)) {
@@ -41,17 +49,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->close();
         exit();
     }
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "Email sai format";
-        $conn->close();
-        exit();
-    }
-    if (!preg_match("/^[+0-9\s.-]+$/", $phonenumer)) {
-        echo "Phone sai cu phap";
-        $conn->close();
-        exit();
-    }
-    if (!preg_match("/^[a-zA-Z' ]*$/", $country) || !preg_match("/^[a-zA-Z' ]*$/", $city)) {
+    // if (!preg_match("/^\d+$/", $phone_number)) {
+    //     echo "Phone sai cu phap";
+    //     $conn->close();
+    //     exit();
+    // }
+
+    if (!preg_match("/^[a-zA-Z' ]*$/", $country) ) {
         echo "City hoac Country sai cu phap";
         $conn->close();
         exit();  
@@ -96,19 +100,84 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Insert data into the applicants table using prepared statement
-    $sql = "INSERT INTO applicants (fullname, professional_title, email, phone_number, address, city, country, profile_pic, created_date, updated_date) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), CURDATE())";
+    $sql = "INSERT INTO pinfo (cv_id, fullname, professional_title, address, city, country, profile_pic) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssss", $fullname, $professional_title, $email, $phonenumer, $address, $city, $country, basename($_FILES["profile-img"]["name"]));
+    $stmt->bind_param("issssss", $cv_id, $fullname, $professional_title, $address, $city, $country, $picname);
+
+    //phone number
+    foreach ($phone_numbers as $phone) {
+        $phone = mysqli_real_escape_string($conn, $phone);
+        $insertQuery = "INSERT INTO phone_number (cv_id, phone_number) VALUES ('$cv_id', '$phone')";
+        
+        if (!mysqli_query($conn, $insertQuery)) {
+            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+            exit();
+        }
+    }
+    //emails  
+    foreach ($emails as $email) {
+        $email = mysqli_real_escape_string($conn, $email);
+        $insertQuery = "INSERT INTO email (cv_id, email_address) VALUES ('$cv_id', '$email')";
+        
+        if (!mysqli_query($conn, $insertQuery)) {
+            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+            exit();
+        }
+    }
+    //social media
+    if (isset($_POST['media-link']) && isset($_POST['media-name'])) {
+        $media_link = $_POST['media-link'];
+        $media_name = $_POST['media-name'];
+        foreach ($media_link as $index => $medialink) {
+            $medialink = mysqli_real_escape_string($conn, $medialink);
+            $socialmedia_name = mysqli_real_escape_string($conn, $media_name[$index]);
+        
+            $insertQuery = "INSERT INTO socialmedia_link (cv_id, socialmedia_name, socialmedia_link) VALUES ('$cv_id', '$socialmedia_name', '$medialink')";
+            
+            if (!mysqli_query($conn, $insertQuery)) {
+                echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                exit();
+            }
+        }
+    }
+    
+    //experience
+    if (
+        count($job_title) === count($company_name) &&
+        count($company_name) === count($job_start_date) &&
+        count($job_start_date) === count($job_end_date)
+    ) {
+        // Get the length of the arrays
+        $array_length = count($job_title);
+
+        // Loop through the arrays and insert data into the 'experience' table
+        for ($i = 0; $i < $array_length; $i++) {
+            $current_job_title = mysqli_real_escape_string($conn, $job_title[$i]);
+            $current_company_name = mysqli_real_escape_string($conn, $company_name[$i]);
+            $current_start_date = mysqli_real_escape_string($conn, $job_start_date[$i]);
+            $current_end_date = mysqli_real_escape_string($conn, $job_end_date[$i]);
+
+            $insertQuery = "INSERT INTO experience (cv_id, company_name, job_title, start_date, end_date) 
+                            VALUES ('$cv_id', '$current_company_name', '$current_job_title', '$current_start_date', '$current_end_date')";
+
+            if (!mysqli_query($conn, $insertQuery)) {
+                echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                exit();
+            }
+        }
+
+        echo "Experience data inserted successfully";
+    } 
+
 
     if ($stmt->execute()) {
         echo "Record added successfully";
+        header("Location: index.php?add_cv_success");
     } else {
         echo "Error: " . $sql . "<br>" . $stmt->error;
     }
-
     $stmt->close();
 }
 
