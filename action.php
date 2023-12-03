@@ -173,10 +173,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
         }
-
         echo "Experience data inserted successfully";
     } 
+    //experence description
+    $getExpQuery = "SELECT experience_id FROM experience WHERE cv_id = '$cv_id'";
+    $expResult = mysqli_query($conn, $getExpQuery);
+    
+    if ($expResult && mysqli_num_rows($expResult) > 0) {
+        $expRow = mysqli_fetch_assoc($expResult);
+        $experience_id = $expRow['experience_id'];
+    }
+    
+    $descriptions = $_POST['job-des'];
+    foreach ($descriptions as $description) {
+        // Ensure that $description is sanitized and validated as needed
+        //$description = mysqli_real_escape_string($conn, $description);
+    
+        // Insert data into the 'experience_description' table
+        $insertQuery = "INSERT INTO experience_description (experience_id, description) VALUES ('$experience_id', '$description')";
+        if (!mysqli_query($conn, $insertQuery)) {
+            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+            exit();
+        }
+    }
+    
 
+    //education
+    
 
     if ($stmt->execute()) {
         echo "Record added successfully";
