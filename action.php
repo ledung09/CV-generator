@@ -26,7 +26,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $company_name  = $_POST['company-name'];    //array
     $job_start_date  = $_POST['job-start-date']; //array
     $job_end_date  = $_POST['job-end-date'];      //array
-
+    //education
+    $edu_des = $_POST['edu-des'];
+    $institution_names = $_POST['edu-ins-name'];
+    $start_dates = $_POST['edu-start-date'];
+    $end_dates = $_POST['edu-end-date'];
     // File Upload
     $targetDir = "uploads/";  
     $targetFile = $targetDir . basename($_FILES["profile-img"]["name"]);
@@ -106,8 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    $sql = "INSERT INTO pinfo (user_id,cv_id, fullname, professional_title, address, city, country, profile_pic) 
-    VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+    $sql = "INSERT INTO pinfo (user_id,cv_id, fullname, professional_title, address, city, country, profile_pic) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("iissssss",$user_id, $cv_id, $fullname, $professional_title, $address, $city, $country, $picname);
@@ -199,8 +202,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
 
     //education
-    
+    for ($i = 0; $i < count($edu_des); $i++) {
 
+        $edu_des_i = mysqli_real_escape_string($conn, $edu_des[$i]);
+        $institution_name_i = mysqli_real_escape_string($conn, $institution_names[$i]);
+        $start_date_i = mysqli_real_escape_string($conn, $start_dates[$i]);
+        $end_date_i = mysqli_real_escape_string($conn, $end_dates[$i]);
+    
+        // Insert data into the 'education' table
+        $insertQuery = "INSERT INTO education (cv_id, edu_des, institution_name, start_date, end_date) VALUES ('$cv_id', '$edu_des_i', '$institution_name_i', '$start_date_i', '$end_date_i')";
+    
+        if (!mysqli_query($conn, $insertQuery)) {
+            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+            exit();
+        }
+    }
+    
     if ($stmt->execute()) {
         echo "Record added successfully";
         header("Location: index.php?add_cv_success");
