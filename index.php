@@ -59,7 +59,7 @@
       } else if ($page == 'manageCVs') {
         include "./pages/manage/manage.php";
       } else {
-        include "./pages/error/error.php";
+        include "./pages/error/error404.php";
       }
     } 
   ?>

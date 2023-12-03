@@ -30,7 +30,7 @@ addRef.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="ref-name${idRef}" class="form-label">Referee name</label>
-            <input type="text" class="form-control" id="ref-name${idRef}" placeholder="Enter referee name..." name="ref-name[]" required>
+            <input type="text" class="form-control ref-name" id="ref-name${idRef}" placeholder="Enter referee name..." name="ref-name[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-ref-feedback${idRef}">Please fill out this field.</div>
           </div>
@@ -38,7 +38,7 @@ addRef.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="ref-ins-name${idRef}" class="form-label">Referee institution name</label>
-            <input type="text" class="form-control" id="ref-ins-name${idRef}" placeholder="Enter referee institution name..." name="ref-ins-name[]" required>
+            <input type="text" class="form-control ref-ins-name" id="ref-ins-name${idRef}" placeholder="Enter referee institution name..." name="ref-ins-name[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-ref-feedback${idRef}">Please fill out this field.</div>
           </div>
@@ -48,7 +48,7 @@ addRef.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="ref-email${idRef}" class="form-label">Referee email</label>
-            <input type="email" class="form-control" id="ref-email${idRef}" placeholder="Enter referee email..." name="ref-email[]" required>
+            <input type="email" class="form-control ref-email" id="ref-email${idRef}" placeholder="Enter referee email..." name="ref-email[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-ref-feedback${idRef}">Please fill out this field.</div>
           </div>
@@ -56,7 +56,7 @@ addRef.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="ref-phone${idRef}" class="form-label">Referee phone</label>
-            <input type="tel" class="form-control" id="ref-phone${idRef}" placeholder="Enter referee phone..." name="ref-phone[]" required>
+            <input type="tel" class="form-control ref-phone" id="ref-phone${idRef}" placeholder="Enter referee phone..." name="ref-phone[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-ref-feedback${idRef}">Please fill out this field.</div>
           </div>
@@ -64,7 +64,7 @@ addRef.addEventListener('click', () => {
       </div>
       <div class="mb-3">
         <label for="ref-relation${idRef}" class="form-label">Referee relationship</label>
-        <input type="text" class="form-control" id="ref-relation${idRef}" placeholder="Enter referee relationship..." name="ref-relation[]" required>
+        <input type="text" class="form-control ref-rel" id="ref-relation${idRef}" placeholder="Enter referee relationship..." name="ref-relation[]" required>
         <div class="valid-feedback">Valid.</div>
         <div class="invalid-feedback invalid-ref-feedback${idRef}">Please fill out this field.</div>
       </div>

@@ -43,7 +43,7 @@ function addJobDesUtil(i, addBtn) {
   newListItem.innerHTML = `
     <i class="fa-solid fa-caret-right"></i>
     <div class="d-flex flex-column gap-1 flex-grow-1">
-      <input type="text" class="form-control des-input" name="job-des[${i}][]" placeholder="Enter job description..."
+      <input type="text" class="form-control des-input exps-des" name="job-des[${i}][]" placeholder="Enter job description..."
         id="job-des${idExpDes}" required>
       <div class="valid-feedback">Valid.</div>
       <div class="invalid-feedback" id="invalid-feedback${idExpDes}">Please fill out this field.</div>
@@ -64,7 +64,7 @@ function addJobDesUtil(i, addBtn) {
     warningExp(jobDesInp, jobDesFeeds, true, "", 'exp', 'exp-nav-link')
     if (jobDesInpVal.length === 0) warningExp(jobDesInp, jobDesFeeds, false, "Do not leave empty!", 'exp', 'exp-nav-link')
     else if (jobDesInpVal.length > 150) warningExp(jobDesInp, jobDesFeeds, false, "Maximum 150 characters!", 'exp', 'exp-nav-link')
-    else if (!textnumRegex.test(jobDesInpVal.trim())) warningExp(jobDesInp, jobDesFeeds, false, "No special character allow!", 'exp', 'exp-nav-link')
+    else if (!skillRegex.test(jobDesInpVal.trim())) warningExp(jobDesInp, jobDesFeeds, false, "No special character allow!", 'exp', 'exp-nav-link')
   }
 
   jobDesInp.addEventListener('keyup', validateExpDesInput)
@@ -101,7 +101,7 @@ addJob.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="job-title${idExp}" class="form-label">Job title</label>
-            <input type="text" class="form-control" id="job-title${idExp}" placeholder="Enter job title..." name="job-title[]" required>
+            <input type="text" class="form-control exps-title" id="job-title${idExp}" placeholder="Enter job title..." name="job-title[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-feedback${idExp}">Please fill out this field.</div>
           </div>
@@ -109,7 +109,7 @@ addJob.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="company-name${idExp}" class="form-label">Company name</label>
-            <input type="text" class="form-control" id="company-name${idExp}" placeholder="Enter company name..." name="company-name[]" required>
+            <input type="text" class="form-control exps-name" id="company-name${idExp}" placeholder="Enter company name..." name="company-name[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-feedback${idExp}">Please fill out this field.</div>
           </div>
@@ -119,7 +119,7 @@ addJob.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="job-start-date${idExp}" class="form-label">Job start date</label>
-            <input type="date" class="form-control" id="job-start-date${idExp}" name="job-start-date[]" required>
+            <input type="date" class="form-control exps-sdate" id="job-start-date${idExp}" name="job-start-date[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-feedback${idExp}">Please fill out this field.</div>
           </div>
@@ -127,7 +127,7 @@ addJob.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="job-end-date${idExp}" class="form-label">Job end date</label>
-            <input type="date" class="form-control" id="job-end-date${idExp}" name="job-end-date[]" required>
+            <input type="date" class="form-control exps-edate" id="job-end-date${idExp}" name="job-end-date[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-feedback${idExp}">Please fill out this field.</div>
           </div>
@@ -169,7 +169,7 @@ addJob.addEventListener('click', () => {
     // Validare text
     if (value1.length === 0) warningExp(inp1, invalidFeeds[0], false, 'Do not leave empty!', 'exp', 'exp-nav-link')
     else if (value1.length > 50) warningExp(inp1, invalidFeeds[0], false, 'Maximum 50 characters!', 'exp', 'exp-nav-link')
-    else if (!addressRegex.test(value1.trim())) warningExp(inp1, invalidFeeds[0], false, 'No special character allow!', 'exp', 'exp-nav-link')
+    else if (!skillRegex.test(value1.trim())) warningExp(inp1, invalidFeeds[0], false, 'No special character allow!', 'exp', 'exp-nav-link')
 
     if (value2.length === 0) warningExp(inp2, invalidFeeds[1], false, 'Do not leave empty!', 'exp', 'exp-nav-link')
     else if (value2.length > 100) warningExp(inp2, invalidFeeds[1], false, 'Maximum 100 characters!', 'exp', 'exp-nav-link')

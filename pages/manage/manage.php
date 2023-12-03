@@ -14,7 +14,15 @@
       </a>
     </div>
   </div>
-  <p class="my-3">The .table-hover class enables a hover state (grey background on mouse over) on table rows:</p>
+  <p class="my-3">Check out your list of CVs below!</p>
+  <?php 
+  include_once './db/connect.php';
+  $user_id = 1; // this should be taken from session!
+  $stmt = $conn->prepare("SELECT * FROM cv_management WHERE user_id = ?");
+  $stmt->bind_param("i", $user_id);  // Assuming user_id is an integer, change the "i" if it's a different type
+  $stmt->execute();
+  $result = $stmt->get_result();
+?>
   <table class="table table-hover table-responsive">
     <thead>
       <tr>
@@ -25,68 +33,54 @@
       </tr>
     </thead>
     <tbody>
+      <?php
+  if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {   
+?>
       <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>Doe</td>
+        <td class="align-middle"><?php echo $row['cv_id']; ?></td>
+        <td class="align-middle"><?php echo $row['created_date']; ?></td>
+        <td class="align-middle"><?php echo $row['updated_date']; ?></td>
         <td>
           <div class="d-flex flex-column flex-md-row gap-2">
-            <button onclick="window.location.href='index.php?page=reviewCV&id='" type=" button"
-              class="btn btn-primary btn-sm">View/Update</button>
-            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-              data-bs-target="#deleteCVModal">Delete</button>
+            <button onclick="window.location.href = 'index.php?page=reviewCV&id=<?php echo $row['cv_id']; ?>'"
+              type=" button" class="btn btn-primary btn-sm">View/Update</button>
+            <button type="button" class="btn btn-danger btn-sm"
+              onclick="deleteCVHandler(<?php echo $user_id; ?>, <?php echo $row['cv_id']; ?>)">Delete</button>
           </div>
         </td>
       </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Doe</td>
-        <td>Doe</td>
-        <td>
-          <div class="d-flex flex-column flex-md-row gap-2">
-            <button onclick="window.location.href='index.php?page=reviewCV&id='" type=" button"
-              class="btn btn-primary btn-sm">View/Update</button>
-            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-              data-bs-target="#deleteCVModal">Delete</button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Doe</td>
-        <td>Doe</td>
-        <td>
-          <div class="d-flex flex-column flex-md-row gap-2">
-            <button onclick="window.location.href='index.php?page=reviewCV&id='" type=" button"
-              class="btn btn-primary btn-sm">View/Update</button>
-            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-              data-bs-target="#deleteCVModal">Delete</button>
-          </div>
-        </td>
-      </tr>
+      <?php 
+    }  
+    ?>
     </tbody>
   </table>
+  <?php
+  } else {
+    echo "No rows found for user_id: $user_id";
+  }
+  $stmt->close();
+  $conn->close();
+?>
 </main>
 
-<!-- Delete CV modal -->
-<div class="modal fade" id="deleteCVModal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Delete CV</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <!-- Modal body -->
-      <div class="modal-body">
-        Do you wish to delete this CV?
-      </div>
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Yes</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
-      </div>
+<script>
+function deleteCVHandler(user_id, cv_id) {
+  var result = confirm("Do you want to proceed?");
+  if (result) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        // Handle the response from the server
+        console.log(xhr.responseText);
+        window.location.href = 'index.php?page=manageCVs';
 
-    </div>
-  </div>
-</div>
+      }
+    };
+    xhr.open("POST", "./db/delete.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("user_id=" + user_id + "&cv_id=" + cv_id);
+  }
+
+}
+</script>

@@ -16,7 +16,6 @@ function updateSkillInfo() {
     skillsTitle[i].innerHTML = `Skillset #${i + 1}`;
 
   const skillNameInp = document.getElementsByClassName('skill-name-inp')  
-  console.log(skillNameInp.length)
   for (var i=0; i < skillsCards.length; i++) {
     Array.from(skillNameInp).forEach((inp) => {
       inp.name = `skills-name[${i}][]`
@@ -40,7 +39,7 @@ addSkills.addEventListener("click", () => {
       </div>
       <div class="mb-3">
         <label for="skills-category${idSkills}" class="form-label">Skills category</label>
-        <input type="text" class="form-control" id="skills-category${idSkills}" placeholder="Enter skills category..." name="skills-category[]" required>
+        <input type="text" class="form-control skills-category" id="skills-category${idSkills}" placeholder="Enter skills category..." name="skills-category[]" required>
         <div class="valid-feedback">Valid.</div>
         <div class="invalid-feedback invalid-skills-feedback${idSkills}">Please fill out this field.</div>
       </div>
@@ -53,7 +52,7 @@ addSkills.addEventListener("click", () => {
             <div class="invalid-feedback invalid-skills-feedback${idSkills}">Please fill out this field.</div>
           </div>
         </div>
-        <button type="button" class="btn btn-secondary btn-sm" id="skills-add-name${idSkills}">
+        <button type="button" class="btn btn-secondary btn-sm skills-add-name" id="skills-add-name${idSkills}">
           <div class="btn-additem d-flex gap-1 align-items-center">
             <p>Add</p>
             <i class="fa-solid fa-plus"></i>
@@ -203,7 +202,6 @@ addSkills.addEventListener("click", () => {
       validateSkillsInput();
     })
     updateSkillInfo();
-    console.log('x')
   })
 });
 

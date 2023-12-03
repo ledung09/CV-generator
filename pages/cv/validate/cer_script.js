@@ -31,7 +31,7 @@ addCer.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="cer-name${idCer}" class="form-label">Certificate name</label>
-            <input type="text" class="form-control" id="cer-name${idCer}" placeholder="Enter certificate name..." name="cer-name[]" required>
+            <input type="text" class="form-control cer-name" id="cer-name${idCer}" placeholder="Enter certificate name..." name="cer-name[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-cer-feedback${idCer}">Please fill out this field.</div>
           </div>
@@ -39,7 +39,7 @@ addCer.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="cer-year${idCer}" class="form-label">Year of certification</label>
-            <input type="text" class="form-control" id="cer-year${idCer}" placeholder="Enter year of certification..." name="cer-year[]" required>
+            <input type="text" class="form-control cer-year" id="cer-year${idCer}" placeholder="Enter year of certification..." name="cer-year[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-cer-feedback${idCer}">Please fill out this field.</div>
           </div>
@@ -47,13 +47,13 @@ addCer.addEventListener('click', () => {
       </div>
       <div class="mb-3">
         <label for="cer-ins-name${idCer}" class="form-label">Certifying institution name</label>
-        <input type="text" class="form-control" id="cer-ins-name${idCer}" placeholder="Enter certifying institution name..." name="cer-ins-name[]" required>
+        <input type="text" class="form-control cer-insname" id="cer-ins-name${idCer}" placeholder="Enter certifying institution name..." name="cer-ins-name[]" required>
         <div class="valid-feedback">Valid.</div>
         <div class="invalid-feedback invalid-cer-feedback${idCer}">Please fill out this field.</div>
       </div>
       <div class="mb-3">
         <label for="cer-link${idCer}" class="form-label">Certificate link</label>
-        <input type="text" class="form-control" id="cer-link${idCer}" placeholder="Enter certificate link..." name="cer-link[]" required>
+        <input type="text" class="form-control cer-link" id="cer-link${idCer}" placeholder="Enter certificate link..." name="cer-link[]" required>
         <div class="valid-feedback">Valid.</div>
         <div class="invalid-feedback invalid-cer-feedback${idCer}">Please fill out this field.</div>
       </div>

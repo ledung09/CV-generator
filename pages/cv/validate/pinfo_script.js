@@ -118,7 +118,8 @@ function validatePinfoInput() {
   else if (addr.length > 150) warningExp(pInfoAddress, invalidPinfoFeeds[6], false, 'Maximum 150 characters!', 'pinfo', 'pinfo-nav-link')
   else if (!addressRegex.test(addr.trim())) warningExp(pInfoAddress, invalidPinfoFeeds[6], false, 'No special character/number allow!', 'pinfo', 'pinfo-nav-link')
 
-  if (profileImg.length === 0) warningExp(pInfoProfileImg, invalidPinfoFeeds[7], false, 'Select a file!', 'pinfo', 'pinfo-nav-link')
+  // image bypass
+  // if (profileImg.length === 0) warningExp(pInfoProfileImg, invalidPinfoFeeds[7], false, 'Select a file!', 'pinfo', 'pinfo-nav-link')
 }
 
 
@@ -176,9 +177,9 @@ addMedia.addEventListener('click', () => {
   var newSocialMediaDiv = document.createElement('div');
   newSocialMediaDiv.classList.add('mb-3', 'media-card')
   newSocialMediaDiv.innerHTML = `
-    <div class="d-flex gap-2 align-items-center valid-container" id="mediaVerify${mediaID}">
+    <div class="d-flex gap-2 align-items-center valid-container mediaVerify" id="mediaVerify${mediaID}">
       <div class="input-group">
-        <select class="form-select w-25" id="mediaSelect${mediaID}">
+        <select class="form-select w-25 pinfo-media-sl" id="mediaSelect${mediaID}">
           <option value="" selected disabled>Select social media</option>
           <option value="LinkedIn">LinkedIn</option>
           <option value="Twitter">Twitter</option>
@@ -192,10 +193,10 @@ addMedia.addEventListener('click', () => {
           <option value="TikTok">TikTok</option>
           <option value="GitLab">GitLab</option>
           <option value="Bitbucket">Bitbucket</option>
-          <option value="other">Other</option>
+          <option value="Other">Other</option>
         </select>
-        <input type="text" class="form-control w-25 d-none" placeholder="Enter social media name..." name="media-name[]" required id="mediaName${mediaID}">
-        <input type="text" class="form-control w-75" placeholder="Enter social media link..." name="media-link[]" required id="mediaLink${mediaID}">
+        <input type="text" class="pinfo-media-name form-control w-25 d-none" placeholder="Enter social media name..." name="media-name[]" required id="mediaName${mediaID}">
+        <input type="text" class="pinfo-media form-control w-75" placeholder="Enter social media link..." name="media-link[]" required id="mediaLink${mediaID}">
       </div>
       <button type="button" class="btn-close del-media" aria-label="Close" id="del-media${mediaID}"></button> 
     </div>
@@ -240,7 +241,7 @@ addMedia.addEventListener('click', () => {
 
   mediaSelect.addEventListener('change', (e) => {
     var slValue = e.target.value
-    if (slValue !== 'other') {
+    if (slValue !== 'Other') {
       mediaName.value = slValue
       mediaName.classList.add('d-none')
       mediaLink.classList.add('w-75')
@@ -257,6 +258,7 @@ addMedia.addEventListener('click', () => {
   mediaName.addEventListener('keyup', validateMediaInput)
   mediaLink.addEventListener('keyup', validateMediaInput)
 
+  validatePinfoInput();
 })
 
 // Verify media inputs
@@ -272,7 +274,7 @@ addPhoneBtn.addEventListener('click', () => {
   newPhoneItem.className = 'd-flex mb-3 align-items-start gap-2 phone-card'; // Set the desired class name
   newPhoneItem.innerHTML = `
     <div class="flex-grow-1">
-      <input type="tel" class="form-control" id="pinfo-phone${phoneID}" placeholder="Enter phone number..." name="phone[]" required />
+      <input type="tel" class="form-control pinfo-phone" id="pinfo-phone${phoneID}" placeholder="Enter phone number..." name="phone[]" required />
       <div class="valid-feedback">Valid.</div>
       <div class="invalid-feedback" id="pinfo-phone-feed${phoneID}">Please fill out this field.</div>
     </div>
@@ -307,6 +309,7 @@ addPhoneBtn.addEventListener('click', () => {
     if (phoneCard.length < 4) addPhoneBtn.style.display = 'flex'
     validatePinfoInput();
   })
+  validatePinfoInput();
 })
 
 
@@ -320,7 +323,7 @@ addEmailBtn.addEventListener('click', () => {
   newEmailItem.className = 'd-flex mb-3 align-items-start gap-2 email-card'; // Set the desired class name
   newEmailItem.innerHTML = `
     <div class="flex-grow-1">
-      <input type="email" class="form-control" id="pinfo-email${emailID}" placeholder="Enter email..." name="email[]" required />
+      <input type="email" class="form-control pinfo-email" id="pinfo-email${emailID}" placeholder="Enter email..." name="email[]" required />
       <div class="valid-feedback">Valid.</div>
       <div class="invalid-feedback" id="pinfo-email-feed${emailID}">Please fill out this field.</div>
     </div>
@@ -354,6 +357,7 @@ addEmailBtn.addEventListener('click', () => {
     if (emailCard.length < 4) addEmailBtn.style.display = 'flex'
     validatePinfoInput();
   })
+  validatePinfoInput();
 })
 
 

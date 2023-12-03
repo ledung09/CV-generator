@@ -1,24 +1,11 @@
 <link rel="stylesheet" href="./pages/cv/style.css" />
 <?php
-  echo $state;
-  echo $id;
+  // echo $state;
+  // echo $id;
+  $user_id = 1; // take from session
 
 ?>
-<main class="my-4">
-  <!-- Default -->
-  <!-- 
-  <div class="process-icon bg-white border-primary">
-  </div>
-
-  <div class="process-icon icon-success border-primary bg-primary d-flex justify-content-center align-items-center">
-    <i class="fa-solid fa-check text-white"></i>
-  </div>
-
-  <div
-    class="process-icon bg-white icon-danger border-danger bg-white d-flex justify-content-center align-items-center">
-    <i class="fa-solid fa-exclamation text-danger"></i>
-  </div> -->
-
+<main class="my-4" id="form-wrapper">
   <div class="container mt-3">
     <!-- Nav pills -->
     <div class="">
@@ -84,6 +71,17 @@
     </div>
 
     <form action="action.php" method="post" class="" id="cv-form">
+      <?php
+        if ($state == 0) {
+      ?>
+      <input type="hidden" name="state" value="create">
+      <?php
+        } else {
+      ?>
+      <input type="hidden" name="state" value="review">
+      <?php
+        }
+      ?>
       <div class="tab-content">
         <div id="pinfo" class="container tab-pane active">
           <br />
@@ -113,8 +111,8 @@
               <div id="pinfo-email-list">
                 <div class="mb-3">
                   <label for="pinfo-email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="pinfo-email" placeholder="Enter email..." name="email[]"
-                    required />
+                  <input type="email" class="form-control  pinfo-email" id="pinfo-email" placeholder="Enter email..."
+                    name="email[]" required />
                   <div class="valid-feedback">Valid.</div>
                   <div class="invalid-feedback invalid-pinfo">
                     Please fill out this field.
@@ -132,8 +130,8 @@
               <div id="pinfo-phone-list">
                 <div class="mb-3">
                   <label for="pinfo-phone" class="form-label">Phone number</label>
-                  <input type="tel" class="form-control" id="pinfo-phone" placeholder="Enter phone number..."
-                    name="phone[]" required />
+                  <input type="tel" class="form-control pinfo-phone" id="pinfo-phone"
+                    placeholder="Enter phone number..." name="phone[]" required />
                   <div class="valid-feedback">Valid.</div>
                   <div class="invalid-feedback invalid-pinfo">
                     Please fill out this field.
@@ -400,8 +398,7 @@
     </div>
   </div>
 
-
-  <!-- Save changes modal -->
+  <!-- Cancel changes modal -->
   <div class="modal fade" id="saveChangesModal">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -424,6 +421,9 @@
       </div>
     </div>
   </div>
+
+
+
   <script>
   function handleFormSubmit() {
     const form = document.getElementById('cv-form')
@@ -437,6 +437,18 @@
   </script> -->
 
   <script src="./pages/cv/validate/tab_script.js"></script>
+
+  <?php 
+  include_once './db/connect.php';
+
+  // Prepare and execute the SQL query
+
+    if ($state == 0) {
+  ?>
+  <script src="./pages/cv/validate/firstItem_script.js"></script>
+  <?php  
+    }
+  ?>
   <script src="./pages/cv/validate/pinfo_script.js"></script>
   <script src="./pages/cv/validate/exp_script.js"></script>
   <script src="./pages/cv/validate/edu_script.js"></script>
@@ -445,3 +457,439 @@
   <script src="./pages/cv/validate/prj_script.js"></script>
   <script src="./pages/cv/validate/ref_script.js"></script>
 </main>
+
+<?php 
+  $sql = "SELECT cv_id FROM cv_management WHERE user_id = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("i", $user_id);
+  $stmt->execute();
+
+  $result = $stmt->get_result();
+  $all_cv = [];
+  while ($row = $result->fetch_assoc()) {
+      $all_cv[] = $row['cv_id'];
+  }
+
+  // Close the statement and connection
+  $stmt->close();
+  if ($state == 1) {
+    if (!in_array($id, $all_cv)) {
+      include "./pages/error/error501.php";
+      ?>
+<script>
+document.getElementById('form-wrapper').style.display = 'none';
+</script>
+<?php
+    } else {
+  $CVid = $id;
+  
+  // Prepare and execute the SQL query
+  $sql = "SELECT * FROM pinfo WHERE user_id = ? AND cv_id = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("ii", $user_id, $CVid);  // Assuming cv_id is an integer, change the "i" if it's a different type
+  $stmt->execute();
+  
+  // Get the result
+  $result = $stmt->get_result();
+  
+  // Check if a row was returned
+  if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+?>
+<script>
+document.getElementById('pinfo-fname').value = '<?php echo $row['fullname'];?>'
+document.getElementById('pinfo-profess').value = '<?php echo $row['professional_title'];?>'
+document.getElementById('pinfo-country').value = '<?php echo $row['country'];?>';
+document.getElementById('pinfo-city').value = '<?php echo $row['city'];?>';
+document.getElementById('pinfo-address').value = '<?php echo $row['address'];?>';
+document.getElementById('pinfo-image').value = '';
+</script>
+<?php
+  };
+  // Close the statement and connection
+  $stmt->close();
+
+  // Email
+
+  $sql = "SELECT * FROM email WHERE user_id = ? AND cv_id = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("ii", $user_id, $CVid);  // Assuming cv_id is an integer, change the "i" if it's a different type
+  $stmt->execute();
+  
+  // Get the result
+  $result = $stmt->get_result();
+  
+  // Check if a row was returned
+  if ($result->num_rows > 0) {
+    if ($result->num_rows > 1) {
+?>
+<script>
+for (var i = 0; i < <?php echo $result->num_rows-1;?>; i++) {
+  document.getElementById('pinfo-add-email').click();
+}
+</script>
+<?php
+    };
+    for ($i = 0; $row = $result->fetch_assoc(); $i++) {
+?>
+<script>
+document.getElementsByClassName('pinfo-email')[<?php echo $i;?>].classList.remove('is-invalid');
+document.getElementsByClassName('pinfo-email')[<?php echo $i;?>].classList.add('is-valid');
+document.getElementsByClassName('pinfo-email')[<?php echo $i;?>].value = '<?php echo $row['email_address'];?>';
+</script>
+<?php
+  }
+};
+// Close the statement and connection
+$stmt->close();
+
+// Phone
+
+$sql = "SELECT * FROM phone_number WHERE user_id = ? AND cv_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $user_id, $CVid);  // Assuming cv_id is an integer, change the "i" if it's a different type
+$stmt->execute();
+
+// Get the result
+$result = $stmt->get_result();
+
+// Check if a row was returned
+if ($result->num_rows > 0) {
+  if ($result->num_rows > 1) {
+?>
+<script>
+for (var i = 0; i < <?php echo $result->num_rows-1;?>; i++) {
+  document.getElementById('pinfo-add-phone').click();
+}
+</script>
+<?php
+  };
+  for ($i = 0; $row = $result->fetch_assoc(); $i++) {
+?>
+<script>
+document.getElementsByClassName('pinfo-phone')[<?php echo $i;?>].classList.remove('is-invalid');
+document.getElementsByClassName('pinfo-phone')[<?php echo $i;?>].classList.add('is-valid');
+document.getElementsByClassName('pinfo-phone')[<?php echo $i;?>].value = '<?php echo $row['phone_number'];?>';
+</script>
+<?php
+}
+};
+// Close the statement and connection
+$stmt->close();
+
+// Media
+
+$sql = "SELECT * FROM socialmedia_link WHERE user_id = ? AND cv_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii",$user_id, $CVid);  // Assuming cv_id is an integer, change the "i" if it's a different type
+$stmt->execute();
+
+// Get the result
+$result = $stmt->get_result();
+
+// Check if a row was returned
+if ($result->num_rows > 0) {
+?>
+<script>
+for (var i = 0; i < <?php echo $result->num_rows;?>; i++) {
+  document.getElementById('pinfo-add-media').click();
+}
+</script>
+<?php
+  for ($i = 0; $row = $result->fetch_assoc(); $i++) {
+?>
+<script>
+var commonMedia = ["LinkedIn", "Twitter", "GitHub", "Instagram", "Facebook", "Dribbble", "Stack Overflow",
+  "AngelList",
+  "Pinterest",
+  "TikTok", "GitLab", "Bitbucket"
+];
+document.getElementsByClassName('pinfo-media-sl')[<?php echo $i;?>].value = '<?php echo $row['socialmedia_name'];?>';
+document.getElementsByClassName('pinfo-media-name')[<?php echo $i;?>].value = " ";
+
+if (!commonMedia.includes('<?php echo $row['socialmedia_name'];?>')) {
+  document.getElementsByClassName('pinfo-media-sl')[<?php echo $i;?>].value = 'Other';
+  document.getElementsByClassName('pinfo-media-name')[<?php echo $i;?>].classList.remove('d-none');
+  document.getElementsByClassName('pinfo-media-name')[<?php echo $i;?>].value =
+    '<?php echo $row['socialmedia_name'];?>';
+  document.getElementsByClassName('pinfo-media')[<?php echo $i;?>].classList.remove('w-75');
+  document.getElementsByClassName('pinfo-media')[<?php echo $i;?>].classList.add('w-50');
+
+}
+document.getElementsByClassName('pinfo-media')[<?php echo $i;?>].value = '<?php echo $row['socialmedia_link'];?>';
+document.getElementsByClassName('mediaVerify')[<?php echo $i;?>].classList.remove('is-invalid');
+document.getElementsByClassName('mediaVerify')[<?php echo $i;?>].classList.add('is-valid');
+</script>
+<?php
+}
+};
+// Close the statement and connection
+$stmt->close();
+?>
+
+<script>
+navLinkA[1].click();
+</script>
+
+
+<?php 
+$des_cnt = 0;
+$sql = "SELECT * FROM experience WHERE user_id = ? AND cv_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $user_id, $CVid);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+  for ($i = 0; $row = $result->fetch_assoc(); $i++) {
+      ?>
+<script>
+document.getElementById('add-job').click();
+document.getElementsByClassName('exps-title')[<?php echo $i;?>].value = '<?php echo $row['job_title'];?>'
+document.getElementsByClassName('exps-name')[<?php echo $i;?>].value = '<?php echo $row['company_name'];?>'
+document.getElementsByClassName('exps-sdate')[<?php echo $i;?>].value = '<?php echo $row['start_date'];?>'
+document.getElementsByClassName('exps-edate')[<?php echo $i;?>].value = '<?php echo $row['end_date'];?>'
+</script>
+<?php
+    $sql1 = "SELECT * FROM experience_description WHERE experience_id = ?";
+    $stmt1 = $conn->prepare($sql1);
+    $stmt1->bind_param("s", $row['experience_id']);
+    $stmt1->execute();
+
+    $result1 = $stmt1->get_result();
+
+    if ($result1->num_rows > 0) {
+      for ($j = 0; $row1 = $result1->fetch_assoc(); $j++) {
+          ?>
+<script>
+document.getElementsByClassName('add-job-deses')[<?php echo $i;?>].click();
+document.getElementsByClassName('exps-des')[<?php echo $des_cnt;?>].value = '<?php echo $row1['description'];?>';
+</script>
+<?php
+        $des_cnt++;
+      }
+    }
+
+    // Close the statement and connection
+    $stmt1->close();
+  }
+}
+
+// Close the statement and connection
+$stmt->close();
+?>
+
+<script>
+navLinkA[2].click();
+</script>
+
+
+<?php 
+$des_cnt = 0;
+$sql = "SELECT * FROM education WHERE user_id = ? AND cv_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $user_id, $CVid);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+  for ($i = 0; $row = $result->fetch_assoc(); $i++) {
+      ?>
+<script>
+document.getElementById('add-edu').click();
+document.getElementsByClassName('edu-des')[<?php echo $i;?>].value = '<?php echo $row['edu_des'];?>'
+document.getElementsByClassName('edu-ins-name')[<?php echo $i;?>].value = '<?php echo $row['institution_name'];?>'
+document.getElementsByClassName('edu-sdate')[<?php echo $i;?>].value = '<?php echo $row['start_date'];?>'
+document.getElementsByClassName('edu-edate')[<?php echo $i;?>].value = '<?php echo $row['end_date'];?>'
+</script>
+<?php
+  }
+}
+
+// Close the statement and connection
+$stmt->close();
+?>
+
+
+<script>
+navLinkA[3].click();
+</script>
+
+
+<?php 
+$des_cnt = 0;
+$sql = "SELECT * FROM certificate WHERE user_id = ? AND cv_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $user_id, $CVid);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+  for ($i = 0; $row = $result->fetch_assoc(); $i++) {
+      ?>
+<script>
+document.getElementById('add-cer').click();
+document.getElementsByClassName('cer-name')[<?php echo $i;?>].value = '<?php echo $row['certificate_name'];?>'
+document.getElementsByClassName('cer-year')[<?php echo $i;?>].value = '<?php echo $row['certificate_date'];?>'
+document.getElementsByClassName('cer-insname')[<?php echo $i;?>].value = '<?php echo $row['certifying_institution'];?>'
+document.getElementsByClassName('cer-link')[<?php echo $i;?>].value = '<?php echo $row['certificate_link'];?>'
+</script>
+<?php
+  }
+}
+
+// Close the statement and connection
+$stmt->close();
+?>
+
+
+<script>
+navLinkA[4].click();
+</script>
+
+
+<?php 
+$skill_cnt = 0;
+$sql = "SELECT * FROM skill WHERE user_id = ? AND cv_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $user_id, $CVid);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+  for ($i = 0; $row = $result->fetch_assoc(); $i++) {
+      ?>
+<script>
+document.getElementById('add-skills').click();
+document.getElementsByClassName('skills-category')[<?php echo $i;?>].value = '<?php echo $row['skill_type'];?>'
+</script>
+<?php
+    $sql1 = "SELECT * FROM skillname WHERE skill_id = ?";
+    $stmt1 = $conn->prepare($sql1);
+    $stmt1->bind_param("s", $row['skill_id']);
+    $stmt1->execute();
+
+    $result1 = $stmt1->get_result();
+
+    if ($result1->num_rows > 0) {
+      for ($j = 0; $row1 = $result1->fetch_assoc(); $j++) {
+          ?>
+<script>
+document.getElementsByClassName('skill-name-inp')[<?php echo $skill_cnt;?>].value = '<?php echo $row1['skill_name'];?>';
+</script>
+<?php 
+if ($j != $result1->num_rows - 1) {
+  ?>
+<script>
+document.getElementsByClassName('skills-add-name')[<?php echo $i;?>].click();
+</script>
+<?php
+}
+?>
+<?php
+        $skill_cnt++;
+      }
+    }
+    // Close the statement and connection
+    $stmt1->close();
+  }
+}
+
+// Close the statement and connection
+$stmt->close();
+?>
+
+
+<script>
+navLinkA[5].click();
+</script>
+
+
+<?php 
+$des_cnt = 0;
+$sql = "SELECT * FROM project WHERE user_id = ? AND cv_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $user_id, $CVid);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+  for ($i = 0; $row = $result->fetch_assoc(); $i++) {
+      ?>
+<script>
+document.getElementById('add-prj').click();
+document.getElementsByClassName('prj-name')[<?php echo $i;?>].value = '<?php echo $row['project_name'];?>'
+document.getElementsByClassName('prj-year')[<?php echo $i;?>].value = '<?php echo $row['project_year'];?>'
+document.getElementsByClassName('prj-link')[<?php echo $i;?>].value = '<?php echo $row['project_link'];?>'
+document.getElementsByClassName('prj-des')[<?php echo $i;?>].value = '<?php echo $row['description'];?>'
+</script>
+<?php
+  }
+}
+
+// Close the statement and connection
+$stmt->close();
+?>
+
+<script>
+navLinkA[6].click();
+</script>
+
+
+<?php 
+$des_cnt = 0;
+$sql = "SELECT * FROM reference WHERE user_id = ? AND cv_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $user_id, $CVid);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+  for ($i = 0; $row = $result->fetch_assoc(); $i++) {
+      ?>
+<script>
+document.getElementById('add-ref').click();
+document.getElementsByClassName('ref-name')[<?php echo $i;?>].value = '<?php echo $row['reference_name'];?>'
+document.getElementsByClassName('ref-ins-name')[<?php echo $i;?>].value = '<?php echo $row['institution_name'];?>'
+document.getElementsByClassName('ref-email')[<?php echo $i;?>].value = '<?php echo $row['ref_email'];?>'
+document.getElementsByClassName('ref-phone')[<?php echo $i;?>].value = '<?php echo $row['ref_phone'];?>'
+document.getElementsByClassName('ref-rel')[<?php echo $i;?>].value = '<?php echo $row['ref_relation'];?>'
+</script>
+<?php
+  }
+}
+
+// Close the statement and connection
+$stmt->close();
+?>
+
+
+
+<script>
+// What out create CV!!!
+const eles = document.getElementsByClassName('is-invalid');
+Array.from(eles).forEach((ele) => {
+  ele.classList.remove('is-invalid')
+  ele.classList.add('is-valid')
+})
+
+pillVerify('pinfo', 'pinfo-nav-link')
+pillVerify('exp', 'exp-nav-link')
+pillVerify('edu', 'edu-nav-link')
+pillVerify('cer', 'cer-nav-link')
+pillVerify('skills', 'skills-nav-link')
+pillVerify('prj', 'prj-nav-link')
+pillVerify('ref', 'ref-nav-link')
+navLinkA[0].click();
+</script>
+
+<?php 
+  }
+}
+?>

@@ -31,7 +31,7 @@ addEdu.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="edu-des${idEdu}" class="form-label">Education description</label>
-            <input type="text" class="form-control" id="edu-des${idEdu}" placeholder="Enter education description..." name="edu-des[]" required>
+            <input type="text" class="form-control edu-des" id="edu-des${idEdu}" placeholder="Enter education description..." name="edu-des[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-edu-feedback${idEdu}">Please fill out this field.</div>
           </div>
@@ -39,7 +39,7 @@ addEdu.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="edu-ins-name${idEdu}" class="form-label">Education institution name</label>
-            <input type="text" class="form-control" id="edu-ins-name${idEdu}" placeholder="Enter education institution name..." name="edu-ins-name[]" required>
+            <input type="text" class="form-control edu-ins-name" id="edu-ins-name${idEdu}" placeholder="Enter education institution name..." name="edu-ins-name[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-edu-feedback${idEdu}">Please fill out this field.</div>
           </div>
@@ -49,7 +49,7 @@ addEdu.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="edu-start-date${idEdu}" class="form-label">Education start date</label>
-            <input type="date" class="form-control" id="edu-start-date${idEdu}" name="edu-start-date[]" required>
+            <input type="date" class="form-control edu-sdate" id="edu-start-date${idEdu}" name="edu-start-date[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-edu-feedback${idEdu}">Please fill out this field.</div>
           </div>
@@ -57,7 +57,7 @@ addEdu.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="edu-end-date${idEdu}" class="form-label">Education end date</label>
-            <input type="date" class="form-control" id="edu-end-date${idEdu}" name="edu-end-date[]" required>
+            <input type="date" class="form-control edu-edate" id="edu-end-date${idEdu}" name="edu-end-date[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-edu-feedback${idEdu}">Please fill out this field.</div>
           </div>

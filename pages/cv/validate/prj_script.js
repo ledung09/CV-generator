@@ -30,7 +30,7 @@ addPrj.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="prj-name${idPrj}" class="form-label">Project name</label>
-            <input type="text" class="form-control" id="prj-name${idPrj}" placeholder="Enter project name..." name="prj-name[]" required>
+            <input type="text" class="form-control prj-name" id="prj-name${idPrj}" placeholder="Enter project name..." name="prj-name[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-prj-feedback${idPrj}">Please fill out this field.</div>
           </div>
@@ -38,7 +38,7 @@ addPrj.addEventListener('click', () => {
         <div class="col-md">
           <div class="mb-3">
             <label for="prj-year${idPrj}" class="form-label">Project year</label>
-            <input type="text" class="form-control" id="prj-year${idPrj}" placeholder="Enter project year..." name="prj-year[]" required>
+            <input type="text" class="form-control prj-year" id="prj-year${idPrj}" placeholder="Enter project year..." name="prj-year[]" required>
             <div class="valid-feedback">Valid.</div>
             <div class="invalid-feedback invalid-prj-feedback${idPrj}">Please fill out this field.</div>
           </div>
@@ -46,13 +46,13 @@ addPrj.addEventListener('click', () => {
       </div>
       <div class="mb-3">
         <label for="prj-link${idPrj}" class="form-label">Project link</label>
-        <input type="email" class="form-control" id="prj-link${idPrj}" placeholder="Enter project link..." name="prj-link[]" required>
+        <input type="email" class="form-control prj-link" id="prj-link${idPrj}" placeholder="Enter project link..." name="prj-link[]" required>
         <div class="valid-feedback">Valid.</div>
         <div class="invalid-feedback invalid-prj-feedback${idPrj}">Please fill out this field.</div>
       </div>
       <div class="mb-3">
         <label for="prj-des${idPrj}" class="form-label">Project description</label>
-        <input type="tel" class="form-control" id="prj-des${idPrj}" placeholder="Enter project description..." name="prj-des[]" required>
+        <input type="tel" class="form-control prj-des" id="prj-des${idPrj}" placeholder="Enter project description..." name="prj-des[]" required>
         <div class="valid-feedback">Valid.</div>
         <div class="invalid-feedback invalid-prj-feedback${idPrj}">Please fill out this field.</div>
       </div>
