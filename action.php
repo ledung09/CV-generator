@@ -11,10 +11,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $city = $_POST['city'];
     $address = $_POST['address'];
     $picname = basename($_FILES["profile-img"]["name"]);
-    $phone_numbers = $_POST['phone']; //another table
-    $emails   = $_POST['email'];        //another table
-    $media_link = $_POST['media-link']; //another table
-    $media_name = $_POST['media-name']; 
+    $phone_numbers = $_POST['phone']; //another table,array
+    $emails   = $_POST['email'];        //another table, array
+
+
+    //experience
+    $job_title  = $_POST['job-title'];        //array
+    $company_name  = $_POST['company-name'];    //array
+    $job_start_date  = $_POST['job-start-date']; //array
+    $job_end_date  = $_POST['job-end-date'];      //array
 
     // File Upload
     $targetDir = "uploads/";  
@@ -114,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //emails  
     foreach ($emails as $email) {
         $email = mysqli_real_escape_string($conn, $email);
-        $insertQuery = "INSERT INTO email (cv_id, email_address) VALUES ('$cv_id', '$phone')";
+        $insertQuery = "INSERT INTO email (cv_id, email_address) VALUES ('$cv_id', '$email')";
         
         if (!mysqli_query($conn, $insertQuery)) {
             echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
@@ -122,18 +127,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     //social media
-    foreach ($media_link as $index => $medialink) {
-        $medialink = mysqli_real_escape_string($conn, $medialink);
-        $socialmedia_name = mysqli_real_escape_string($conn, $media_name[$index]);
-    
-        $insertQuery = "INSERT INTO socialmedia_link (cv_id, socialmedia_name, socialmedia_link) VALUES ('$cv_id', '$socialmedia_name', '$medialink')";
+    if (isset($_POST['media-link']) && isset($_POST['media-name'])) {
+        $media_link = $_POST['media-link'];
+        $media_name = $_POST['media-name'];
+        foreach ($media_link as $index => $medialink) {
+            $medialink = mysqli_real_escape_string($conn, $medialink);
+            $socialmedia_name = mysqli_real_escape_string($conn, $media_name[$index]);
         
-        if (!mysqli_query($conn, $insertQuery)) {
-            echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
-            exit();
+            $insertQuery = "INSERT INTO socialmedia_link (cv_id, socialmedia_name, socialmedia_link) VALUES ('$cv_id', '$socialmedia_name', '$medialink')";
+            
+            if (!mysqli_query($conn, $insertQuery)) {
+                echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                exit();
+            }
         }
     }
     
+    //experience
+    if (
+        count($job_title) === count($company_name) &&
+        count($company_name) === count($job_start_date) &&
+        count($job_start_date) === count($job_end_date)
+    ) {
+        // Get the length of the arrays
+        $array_length = count($job_title);
+
+        // Loop through the arrays and insert data into the 'experience' table
+        for ($i = 0; $i < $array_length; $i++) {
+            $current_job_title = mysqli_real_escape_string($conn, $job_title[$i]);
+            $current_company_name = mysqli_real_escape_string($conn, $company_name[$i]);
+            $current_start_date = mysqli_real_escape_string($conn, $job_start_date[$i]);
+            $current_end_date = mysqli_real_escape_string($conn, $job_end_date[$i]);
+
+            $insertQuery = "INSERT INTO experience (cv_id, company_name, job_title, start_date, end_date) 
+                            VALUES ('$cv_id', '$current_company_name', '$current_job_title', '$current_start_date', '$current_end_date')";
+
+            if (!mysqli_query($conn, $insertQuery)) {
+                echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                exit();
+            }
+        }
+
+        echo "Experience data inserted successfully";
+    } 
 
 
     if ($stmt->execute()) {
