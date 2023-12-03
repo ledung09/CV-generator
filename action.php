@@ -31,6 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $institution_names = $_POST['edu-ins-name'];
     $start_dates = $_POST['edu-start-date'];
     $end_dates = $_POST['edu-end-date'];
+    //certification
+    $cer_names = $_POST['cer-name'];
+    $cer_years = $_POST['cer-year'];
+    $cer_ins_names = $_POST['cer-ins-name'];
+    $cer_links = $_POST['cer-link'];
     // File Upload
     $targetDir = "uploads/";  
     $targetFile = $targetDir . basename($_FILES["profile-img"]["name"]);
@@ -217,7 +222,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
     }
+    //certification
+    for ($i = 0; $i < count($cer_names); $i++) {
+        $certificate_name = mysqli_real_escape_string($conn, $cer_names[$i]);
+        $certifying_institution = mysqli_real_escape_string($conn, $cer_ins_names[$i]);
+        $certificate_year = mysqli_real_escape_string($conn, $cer_years[$i]);
+        $certificate_link = mysqli_real_escape_string($conn, $cer_links[$i]);
     
+        // Use a prepared statement to prevent SQL injection
+        $insertQuery = "INSERT INTO certificate (cv_id, certificate_name, certifying_institution, certificate_date, certificate_link, user_id)
+                        VALUES (?, ?, ?, ?, ?, ?)";
+    
+        $stmt = $conn->prepare($insertQuery);
+        $stmt->bind_param("issssi", $cv_id, $certificate_name, $certifying_institution, $certificate_year, $certificate_link, $user_id);
+    
+        if (!$stmt->execute()) {
+            echo "Error: " . $insertQuery . "<br>" . $stmt->error;
+            exit();
+        }
+    
+    }
+    //
     if ($stmt->execute()) {
         echo "Record added successfully";
         header("Location: index.php?add_cv_success");
