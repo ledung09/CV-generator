@@ -194,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         WHERE cv_id = $CVID_for_review AND user_id = $user_id";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssii", $fullname, $professional_title, $address, $city, $country, $picname, $cv_id_for_review, $user_id);
+        $stmt->bind_param("ssssss", $fullname, $professional_title, $address, $city, $country, $picname);
 
         if ($stmt->execute()) {
             echo "Record updated successfully";
@@ -285,30 +285,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Experience data updated successfully";
         }
         //experence description
-        $getExpQuery = "SELECT experience_id FROM experience WHERE cv_id = '$cv_id'";
+        $getExpQuery = "SELECT experience_id FROM experience WHERE cv_id = '$CVID_for_review'";
         $expResult = mysqli_query($conn, $getExpQuery);
         
         if ($expResult && mysqli_num_rows($expResult) > 0) {
             $expRow = mysqli_fetch_assoc($expResult);
             $experience_id = $expRow['experience_id'];
         }
-        
-        $descriptions = $_POST['job-des'];
-        for ($i = 0; $i < count($descriptions); $i++) {
-            $current_description = mysqli_real_escape_string($conn, $descriptions[$i]);
-        
-            // Assuming you have a unique identifier for each description
-            $current_description_id = mysqli_real_escape_string($conn, $description_ids[$i]);
-        
-            $updateQuery = "UPDATE experience_description 
-                            SET description = '$current_description' 
-                            WHERE description_id = '$current_description_id'";
-        
-            if (!mysqli_query($conn, $updateQuery)) {
-                echo "Error: " . $updateQuery . "<br>" . mysqli_error($conn);
-                exit();
-            }
+        if (isset($_POST['job-des'])) {
+            $descriptions = $_POST['job-des'];
         }
+        $descriptions = isset($_POST['job-des']) ? $_POST['job-des'] : [];
+
+        // Assuming you have a unique identifier for each description
+        $description_ids = isset($_POST['description-ids']) ? $_POST['description-ids'] : [];
+        
+        if (count($descriptions) > 0 && count($descriptions) === count($description_ids)) {
+            for ($i = 0; $i < count($descriptions); $i++) {
+                $current_description = mysqli_real_escape_string($conn, $descriptions[$i]);
+                $current_description_id = mysqli_real_escape_string($conn, $description_ids[$i]);
+        
+                $updateQuery = "UPDATE experience_description 
+                                SET description = '$current_description' 
+                                WHERE description_id = '$current_description_id'";
+        
+                if (!mysqli_query($conn, $updateQuery)) {
+                    echo "Error: " . $updateQuery . "<br>" . mysqli_error($conn);
+                    exit();
+                }
+            }
+        } else {
+            echo "Error: Invalid or missing data for job descriptions.";
+        }
+        
         
         echo "Experience descriptions updated successfully";
         
