@@ -7,6 +7,9 @@ a { text-decoration: none !important; }
 
 p { margin: 0px}
 
+.cursor-pointer {
+  cursor: pointer;
+}
 
 .list-style-circle {
   list-style-type: circle;
