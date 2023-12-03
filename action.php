@@ -36,6 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cer_years = $_POST['cer-year'];
     $cer_ins_names = $_POST['cer-ins-name'];
     $cer_links = $_POST['cer-link'];
+
+    //skill
+    $skills_categories = $_POST['skills-category'];
+    $skills_names = $_POST['skills-name'];
+
     // File Upload
     $targetDir = "uploads/";  
     $targetFile = $targetDir . basename($_FILES["profile-img"]["name"]);
@@ -44,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //get cv id
     $getCVIdQuery = "SELECT cv_id FROM cv_management WHERE user_id = '$user_id'";
     $cvResult = mysqli_query($conn, $getCVIdQuery);
+      
 
     if ($cvResult && mysqli_num_rows($cvResult) > 0) {
         $cvRow = mysqli_fetch_assoc($cvResult);
@@ -242,6 +248,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     
     }
+    //Skill
+    $skill_ids = array(); // Array to store inserted skill_ids
+
+    foreach ($skills_categories as $skill_category) {
+        // Ensure that $skill_category is sanitized and validated as needed
+        $skill_category = mysqli_real_escape_string($conn, $skill_category);
+
+        // Use a prepared statement to prevent SQL injection
+        $insertQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
+
+        $stmt = $conn->prepare($insertQuery);
+        $stmt->bind_param("isi", $cv_id, $skill_category, $user_id);
+
+        if ($stmt->execute()) {
+            // Get the last inserted skill_id and store it in the array
+            $skill_ids[] = mysqli_insert_id($conn);
+        } else {
+            echo "Error: " . $insertQuery . "<br>" . $stmt->error;
+            exit();
+        }
+    }
+    foreach ($skills_categories as $index => $skill_category) {
+        // Ensure that $skill_category is sanitized and validated as needed
+        $skill_category = mysqli_real_escape_string($conn, $skill_category);
+    
+        // Use a prepared statement to prevent SQL injection
+        $insertSkillQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
+    
+        $stmt = $conn->prepare($insertSkillQuery);
+        $stmt->bind_param("isi", $cv_id, $skill_category, $user_id);
+    
+        if ($stmt->execute()) {
+            // Get the last inserted skill_id
+            $skill_id = mysqli_insert_id($conn);
+            $skill_ids[] = $skill_id; // Store the skill_id in the array
+    
+            // Insert skill names into the skillname table
+            foreach ($skills_names[$index] as $skill_name) {
+                // Ensure that $skill_name is sanitized and validated as needed
+                $skill_name = mysqli_real_escape_string($conn, $skill_name);
+    
+                // Use a prepared statement to prevent SQL injection
+                $insertSkillNameQuery = "INSERT INTO skillname (skill_id, skill_name) VALUES (?, ?)";
+    
+                $stmtSkillName = $conn->prepare($insertSkillNameQuery);
+                $stmtSkillName->bind_param("is", $skill_id, $skill_name);
+    
+                if (!$stmtSkillName->execute()) {
+                    echo "Error: " . $insertSkillNameQuery . "<br>" . $stmtSkillName->error;
+                    exit();
+                }
+    
+                $stmtSkillName->close();
+            }
+        } else {
+            echo "Error: " . $insertSkillQuery . "<br>" . $stmt->error;
+            exit();
+        }
+    
+    }
+
+// $skill_ids now contains the skill_ids for each inserted skill
+
+    
     //
     if ($stmt->execute()) {
         echo "Record added successfully";
