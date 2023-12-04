@@ -5,14 +5,16 @@ $CVID_for_review = $_POST['CVID'];
 include_once('./db/db_connection.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    // Personal Information
-
-    $insertCvQuery = "INSERT INTO cv_management (user_id, created_date, updated_date) VALUES ('$user_id', NOW(), NOW())";
-    if (mysqli_query($conn, $insertCvQuery)) {
-        // Step 2: Retrieve the generated cv_id
-        $cv_id = mysqli_insert_id($conn);
-    }
     $user_id = $_SESSION['user_id'] ;
+    // Personal Information
+    if($state == "create"){
+        $insertCvQuery = "INSERT INTO cv_management (user_id, created_date, updated_date) VALUES ('$user_id', NOW(), NOW())";
+        if (mysqli_query($conn, $insertCvQuery)) {
+            // Step 2: Retrieve the generated cv_id
+            $cv_id = mysqli_insert_id($conn);
+        }
+    }
+
     $fullname = $_POST["fname"];
     $professional_title = $_POST["profess"];
     $country = $_POST['country'];
@@ -190,7 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         WHERE cv_id = $CVID_for_review AND user_id = $user_id";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssii", $fullname, $professional_title, $address, $city, $country, $picname, $cv_id_for_review, $user_id);
+        $stmt->bind_param("ssssss", $fullname, $professional_title, $address, $city, $country, $picname);
 
         if ($stmt->execute()) {
             echo "Record updated successfully";
@@ -263,9 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $current_start_date = mysqli_real_escape_string($conn, $job_start_date[$i]);
                 $current_end_date = mysqli_real_escape_string($conn, $job_end_date[$i]);
         
-                // Assuming you have an experience_id for each record
-                $current_experience_id = mysqli_real_escape_string($conn, $experience_ids[$i]);
-        
+                // Assuming you have an experience_id for each record       
                 $updateQuery = "UPDATE experience 
                                 SET company_name = '$current_company_name', 
                                     job_title = '$current_job_title', 
@@ -281,30 +281,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Experience data updated successfully";
         }
         //experence description
-        $getExpQuery = "SELECT experience_id FROM experience WHERE cv_id = '$cv_id'";
+        $getExpQuery = "SELECT experience_id FROM experience WHERE cv_id = '$CVID_for_review'";
         $expResult = mysqli_query($conn, $getExpQuery);
         
         if ($expResult && mysqli_num_rows($expResult) > 0) {
             $expRow = mysqli_fetch_assoc($expResult);
             $experience_id = $expRow['experience_id'];
         }
-        
-        $descriptions = $_POST['job-des'];
-        for ($i = 0; $i < count($descriptions); $i++) {
-            $current_description = mysqli_real_escape_string($conn, $descriptions[$i]);
-        
-            // Assuming you have a unique identifier for each description
-            $current_description_id = mysqli_real_escape_string($conn, $description_ids[$i]);
-        
-            $updateQuery = "UPDATE experience_description 
-                            SET description = '$current_description' 
-                            WHERE description_id = '$current_description_id'";
-        
-            if (!mysqli_query($conn, $updateQuery)) {
-                echo "Error: " . $updateQuery . "<br>" . mysqli_error($conn);
-                exit();
-            }
+        if (isset($_POST['job-des'])) {
+            $descriptions = $_POST['job-des'];
         }
+        $descriptions = isset($_POST['job-des']) ? $_POST['job-des'] : [];
+
+        // Assuming you have a unique identifier for each description
+        $description_ids = isset($_POST['description-ids']) ? $_POST['description-ids'] : [];
+        
+        if (count($descriptions) > 0 && count($descriptions) === count($description_ids)) {
+            for ($i = 0; $i < count($descriptions); $i++) {
+                $current_description = mysqli_real_escape_string($conn, $descriptions[$i]);
+                $current_description_id = mysqli_real_escape_string($conn, $description_ids[$i]);
+        
+                $updateQuery = "UPDATE experience_description 
+                                SET description = '$current_description' 
+                                WHERE description_id = '$current_description_id'";
+        
+                if (!mysqli_query($conn, $updateQuery)) {
+                    echo "Error: " . $updateQuery . "<br>" . mysqli_error($conn);
+                    exit();
+                }
+            }
+        } else {
+            echo "Error: Invalid or missing data for job descriptions.";
+        }
+        
         
         echo "Experience descriptions updated successfully";
         
@@ -337,7 +346,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $current_end_date = mysqli_real_escape_string($conn, $end_dates[$i]);
         
             // Assuming you have a unique identifier for each education record
-            $current_education_id = mysqli_real_escape_string($conn, $education_ids[$i]);
         
             $updateQuery = "UPDATE education 
                             SET edu_des = '$current_edu_des', 
@@ -380,7 +388,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $current_certificate_link = mysqli_real_escape_string($conn, $cer_links[$i]);
         
             // Assuming you have a unique identifier for each certificate record
-            $current_certificate_id = mysqli_real_escape_string($conn, $certificate_ids[$i]);
         
             $updateQuery = "UPDATE certificate 
                             SET certificate_name = '$current_certificate_name', 
@@ -399,106 +406,176 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
  
 
     if($state == "create"){
-        $skill_ids = array(); 
+        $skill_ids = array(); // Array to store inserted skill_ids
 
-        foreach ($skills_categories as $skill_category) {
+        // Assuming you have a query to fetch skill_id values, replace the query below with your actual query
+        $selectSkillIdQuery = "SELECT skill_id FROM skill WHERE cv_id = ? AND skill_type = ? AND user_id = ?";
+        $stmtSelectSkillId = $conn->prepare($selectSkillIdQuery);
+        
+        foreach ($skills_categories as $index => $skill_category) {
             // Ensure that $skill_category is sanitized and validated as needed
             $skill_category = mysqli_real_escape_string($conn, $skill_category);
-    
-            
-            $insertQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
-    
-            $stmt = $conn->prepare($insertQuery);
-            $stmt->bind_param("isi", $cv_id, $skill_category, $user_id);
-    
-            if ($stmt->execute()) {
-                // Get the last inserted skill_id and store it in the array
-                $skill_ids[] = mysqli_insert_id($conn);
-            } else {
-                echo "Error: " . $insertQuery . "<br>" . $stmt->error;
-                exit();
+        
+            // Assuming you have cv_id and user_id values, replace them with your actual values
+            $cv_id = 1; // Replace with your actual cv_id
+            $user_id = 1; // Replace with your actual user_id
+        
+            $stmtSelectSkillId->bind_param("iss", $cv_id, $skill_category, $user_id);
+            $stmtSelectSkillId->execute();
+            $stmtSelectSkillId->bind_result($skill_id);
+        
+            while ($stmtSelectSkillId->fetch()) {
+                // Store the fetched skill_id in the array
+                $skill_ids[] = $skill_id;
+            }
+        
+            $stmtSelectSkillId->close();
+        }
+        
+        // Insert into skillname table
+        foreach ($skill_ids as $index => $skill_id) {
+            foreach ($skills_names[$index] as $skill_name) {
+                // Ensure that $skill_name is sanitized and validated as needed
+                $skill_name = mysqli_real_escape_string($conn, $skill_name);
+        
+                // Use a prepared statement to prevent SQL injection
+                $insertQuery = "INSERT INTO skillname (skill_id, skill_name) VALUES (?, ?)";
+                $stmt = $conn->prepare($insertQuery);
+                $stmt->bind_param("is", $skill_id, $skill_name);
+        
+                if (!$stmt->execute()) {
+                    echo "Error: " . $insertQuery . "<br>" . $stmt->error;
+                    exit();
+                }
+        
+                $stmt->close();
             }
         }
-        for ($i = 0; $i < count($skills_names); $i++) {
-            $skill_name = mysqli_real_escape_string($conn, $skills_names[$i]);
         
-            // Assuming $skill_ids is an array containing skill_id values
-            $skill_id = $skill_ids[$i];
+        // Use $skill_ids as needed in the rest of your code
         
-            $insertQuery = "INSERT INTO skillname (skill_id, skill_name) VALUES (?, ?)";
-        
-            $stmt = $conn->prepare($insertQuery);
-            $stmt->bind_param("is", $skill_id, $skill_name);
-        
-            if ($stmt->execute()) {
-                // Insert successful
-            } else {
-                echo "Error: " . $insertQuery . "<br>" . $stmt->error;
-                exit();
-            }
-        }
     }
     else if ($state == "review"){
-        $skill_ids = array();
+        // $skill_ids = array();
 
-        // Loop through skills_categories to insert or update records in the skill table
-        foreach ($skills_categories as $skill_category) {
-            $skill_category = mysqli_real_escape_string($conn, $skill_category);
+        // // Loop through skills_categories to insert or update records in the skill table
+        // foreach ($skills_categories as $skill_category) {
+        //     $skill_category = mysqli_real_escape_string($conn, $skill_category);
 
-            // Check if the record with the current skill_category already exists
-            $checkQuery = "SELECT skill_id FROM skill WHERE cv_id = ? AND skill_type = ? AND user_id = ?";
-            $checkStmt = $conn->prepare($checkQuery);
-            $checkStmt->bind_param("isi", $cv_id, $skill_category, $user_id);
-            $checkStmt->execute();
-            $checkStmt->store_result();
+        //     // Check if the record with the current skill_category already exists
+        //     $checkQuery = "SELECT skill_id FROM skill WHERE cv_id = ? AND skill_type = ? AND user_id = ?";
+        //     $checkStmt = $conn->prepare($checkQuery);
+        //     $checkStmt->bind_param("isi", $CVID_for_review , $skill_category, $user_id);
+        //     $checkStmt->execute();
+        //     $checkStmt->store_result();
 
-            if ($checkStmt->num_rows > 0) {
-                // Skill record exists, perform update
-                $updateQuery = "UPDATE skill SET cv_id = ?, skill_type = ?, user_id = ? WHERE cv_id = ? AND skill_type = ? AND user_id = ?";
-                $updateStmt = $conn->prepare($updateQuery);
-                $updateStmt->bind_param("isisii", $cv_id, $skill_category, $user_id, $cv_id, $skill_category, $user_id);
+        //     if ($checkStmt->num_rows > 0) {
+        //         // Skill record exists, perform update
+        //         $updateQuery = "UPDATE skill SET cv_id = ?, skill_type = ?, user_id = ? WHERE cv_id = ? AND skill_type = ? AND user_id = ?";
+        //         $updateStmt = $conn->prepare($updateQuery);
+        //         $updateStmt->bind_param("isisii", $CVID_for_review , $skill_category, $user_id, $CVID_for_review , $skill_category, $user_id);
 
-                if (!$updateStmt->execute()) {
-                    echo "Error: " . $updateQuery . "<br>" . $updateStmt->error;
-                    exit();
-                }
+        //         if (!$updateStmt->execute()) {
+        //             echo "Error: " . $updateQuery . "<br>" . $updateStmt->error;
+        //             exit();
+        //         }
 
-                // Get the skill_id and store it in the array
-                $skill_id = $checkStmt->fetch();
-                $skill_ids[] = $skill_id;
-            } else {
-                // Skill record doesn't exist, perform insert
-                $insertQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
-                $insertStmt = $conn->prepare($insertQuery);
-                $insertStmt->bind_param("isi", $cv_id, $skill_category, $user_id);
+        //         // Get the skill_id and store it in the array
+        //         $skill_id = $checkStmt->fetch();
+        //         $skill_ids[] = $skill_id;
+        //     } else {
+        //         // Skill record doesn't exist, perform insert
+        //         $insertQuery = "INSERT INTO skill (cv_id, skill_type, user_id) VALUES (?, ?, ?)";
+        //         $insertStmt = $conn->prepare($insertQuery);
+        //         $insertStmt->bind_param("isi", $CVID_for_review , $skill_category, $user_id);
 
-                if ($insertStmt->execute()) {
-                    // Get the last inserted skill_id and store it in the array
-                    $skill_ids[] = mysqli_insert_id($conn);
+        //         if ($insertStmt->execute()) {
+        //             // Get the last inserted skill_id and store it in the array
+        //             $skill_ids[] = mysqli_insert_id($conn);
+        //         } else {
+        //             echo "Error: " . $insertQuery . "<br>" . $insertStmt->error;
+        //             exit();
+        //         }
+        //     }
+
+        //     $checkStmt->close();
+        // }
+
+        // // Loop through skills_names to update records in the skillname table
+        // for ($i = 0; $i < count($skills_names); $i++) {
+        //     $skill_name = mysqli_real_escape_string($conn, $skills_names[$i]);
+        //     $skill_id = $skill_ids[$i];
+
+        //     $updateQuery = "UPDATE skillname SET skill_name = ? WHERE skill_id = ?";
+        //     $updateStmt = $conn->prepare($updateQuery);
+        //     $updateStmt->bind_param("si", $skill_name, $skill_id);
+
+        //     if (!$updateStmt->execute()) {
+        //         echo "Error: " . $updateQuery . "<br>" . $updateStmt->error;
+        //         exit();
+        //     }
+        // }
+        if (!empty($skills_categories)) {
+            foreach ($skills_categories as $skill_category) {
+                $skill_category = mysqli_real_escape_string($conn, $skill_category);
+        
+                $updateQuery = "UPDATE skill 
+                                SET skill_type = ? 
+                                WHERE cv_id = $CVID_for_review AND user_id = $user_id";
+        
+                $stmt = $conn->prepare($updateQuery);
+                $stmt->bind_param("s", $skill_category);
+        
+                if ($stmt->execute()) {
+                    // Update successful
                 } else {
-                    echo "Error: " . $insertQuery . "<br>" . $insertStmt->error;
+                    echo "Error: " . $updateQuery . "<br>" . $stmt->error;
                     exit();
                 }
             }
-
-            $checkStmt->close();
+        } else {
+            echo "Error: No skills categories provided.";
         }
 
-        // Loop through skills_names to update records in the skillname table
-        for ($i = 0; $i < count($skills_names); $i++) {
-            $skill_name = mysqli_real_escape_string($conn, $skills_names[$i]);
-            $skill_id = $skill_ids[$i];
-
-            $updateQuery = "UPDATE skillname SET skill_name = ? WHERE skill_id = ?";
-            $updateStmt = $conn->prepare($updateQuery);
-            $updateStmt->bind_param("si", $skill_name, $skill_id);
-
-            if (!$updateStmt->execute()) {
-                echo "Error: " . $updateQuery . "<br>" . $updateStmt->error;
-                exit();
+        if (count($skills_categories) === count($skills_names)) {
+            for ($i = 0; $i < count($skills_categories); $i++) {
+                $skill_category = mysqli_real_escape_string($conn, $skills_categories[$i]);
+                $skill_names = $skills_names[$i]; // Assuming $skills_names is an array of skill names
+        
+                // Insert or update the skill record in the skill table
+                $insertOrUpdateSkillQuery = "INSERT INTO skill (cv_id, skill_type, user_id) 
+                                             VALUES (?, ?, ?) 
+                                             ON DUPLICATE KEY UPDATE skill_id = LAST_INSERT_ID(skill_id)";
+                $stmtSkill = $conn->prepare($insertOrUpdateSkillQuery);
+                $stmtSkill->bind_param("isi", $cv_id, $skill_category, $user_id);
+        
+                if ($stmtSkill->execute()) {
+                    // Get the last inserted or updated skill_id
+                    $skill_id = mysqli_insert_id($conn);
+        
+                    // Update the skillname records based on the skill_id
+                    foreach ($skill_names as $skill_name) {
+                        $skill_name = mysqli_real_escape_string($conn, $skill_name);
+        
+                        $updateSkillNameQuery = "INSERT INTO skillname (skill_id, skill_name) 
+                                                 VALUES (?, ?) 
+                                                 ON DUPLICATE KEY UPDATE skill_name = VALUES(skill_name)";
+                        $stmtSkillName = $conn->prepare($updateSkillNameQuery);
+                        $stmtSkillName->bind_param("is", $skill_id, $skill_name);
+        
+                        if (!$stmtSkillName->execute()) {
+                            echo "Error updating skillname: " . $stmtSkillName->error;
+                            exit();
+                        }
+                    }
+                } else {
+                    echo "Error inserting/updating skill: " . $stmtSkill->error;
+                    exit();
+                }
             }
+        } else {
+            echo "Error: Mismatched data between skills categories and names.";
         }
-
 
     }
     //project
@@ -544,7 +621,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             WHERE cv_id = $CVID_for_review AND user_id = $user_id";
         
             $stmt = $conn->prepare($updateQuery);
-            $stmt->bind_param("ssssi", $prj_name, $prj_year, $prj_des, $prj_link, $project_id);
+            $stmt->bind_param("ssss", $prj_name, $prj_year, $prj_des, $prj_link);
         
             if ($stmt->execute()) {
                 // Update successful
@@ -609,9 +686,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $ref_phone = mysqli_real_escape_string($conn, $ref_phones[$i]);
             $ref_relation = mysqli_real_escape_string($conn, $ref_relations[$i]);
         
-            // Assuming $reference_ids array contains the reference_id values you want to update
-            $reference_id = $reference_ids[$i];
-        
+
             $updateQuery = "UPDATE reference SET 
                             reference_name = ?,
                             institution_name = ?,
@@ -621,7 +696,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             WHERE cv_id = $CVID_for_review AND user_id = $user_id";
         
             $stmt = $conn->prepare($updateQuery);
-            $stmt->bind_param("sssssi", $ref_name, $ref_ins_name, $ref_email, $ref_phone, $ref_relation, $reference_id);
+            $stmt->bind_param("sssss", $ref_name, $ref_ins_name, $ref_email, $ref_phone, $ref_relation);
         
             if ($stmt->execute()) {
                 // Update successful
