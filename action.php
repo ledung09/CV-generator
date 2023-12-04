@@ -516,7 +516,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //         exit();
         //     }
         // }
+        if (!empty($skills_categories)) {
+            foreach ($skills_categories as $skill_category) {
+                $skill_category = mysqli_real_escape_string($conn, $skill_category);
+        
+                $updateQuery = "UPDATE skill 
+                                SET skill_type = ? 
+                                WHERE cv_id = $CVID_for_review AND user_id = $user_id";
+        
+                $stmt = $conn->prepare($updateQuery);
+                $stmt->bind_param("s", $skill_category);
+        
+                if ($stmt->execute()) {
+                    // Update successful
+                } else {
+                    echo "Error: " . $updateQuery . "<br>" . $stmt->error;
+                    exit();
+                }
+            }
+        } else {
+            echo "Error: No skills categories provided.";
+        }
 
+        if (count($skills_categories) === count($skills_names)) {
+            for ($i = 0; $i < count($skills_categories); $i++) {
+                $skill_category = mysqli_real_escape_string($conn, $skills_categories[$i]);
+                $skill_names = $skills_names[$i]; // Assuming $skills_names is an array of skill names
+        
+                // Insert or update the skill record in the skill table
+                $insertOrUpdateSkillQuery = "INSERT INTO skill (cv_id, skill_type, user_id) 
+                                             VALUES (?, ?, ?) 
+                                             ON DUPLICATE KEY UPDATE skill_id = LAST_INSERT_ID(skill_id)";
+                $stmtSkill = $conn->prepare($insertOrUpdateSkillQuery);
+                $stmtSkill->bind_param("isi", $cv_id, $skill_category, $user_id);
+        
+                if ($stmtSkill->execute()) {
+                    // Get the last inserted or updated skill_id
+                    $skill_id = mysqli_insert_id($conn);
+        
+                    // Update the skillname records based on the skill_id
+                    foreach ($skill_names as $skill_name) {
+                        $skill_name = mysqli_real_escape_string($conn, $skill_name);
+        
+                        $updateSkillNameQuery = "INSERT INTO skillname (skill_id, skill_name) 
+                                                 VALUES (?, ?) 
+                                                 ON DUPLICATE KEY UPDATE skill_name = VALUES(skill_name)";
+                        $stmtSkillName = $conn->prepare($updateSkillNameQuery);
+                        $stmtSkillName->bind_param("is", $skill_id, $skill_name);
+        
+                        if (!$stmtSkillName->execute()) {
+                            echo "Error updating skillname: " . $stmtSkillName->error;
+                            exit();
+                        }
+                    }
+                } else {
+                    echo "Error inserting/updating skill: " . $stmtSkill->error;
+                    exit();
+                }
+            }
+        } else {
+            echo "Error: Mismatched data between skills categories and names.";
+        }
 
     }
     //project
