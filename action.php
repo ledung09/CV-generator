@@ -1,8 +1,11 @@
 <?php
 session_start();
 $state = $_POST['state'];
-$CVID_for_review = $_POST['CVID'];
-include_once('./db/db_connection.php');
+// $CVID_for_review = $_POST['CVID'];
+$CVID_for_review = 0;
+if (isset($_POST['CVID'])) $CVID_for_review = $_POST['CVID'];
+
+include_once('./db/connect.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $user_id = $_SESSION['user_id'] ;
@@ -152,7 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //phone number
         foreach ($phone_numbers as $phone) {
             $phone = mysqli_real_escape_string($conn, $phone);
-            $insertQuery = "INSERT INTO phone_number (user_id,cv_id, phone_number) VALUES ('$user_id','$cv_id', '$phone')";
+            $insertQuery = "INSERT INTO phone_number (cv_id, phone_number) VALUES ('$cv_id', '$phone')";
             
             if (!mysqli_query($conn, $insertQuery)) {
                 echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
@@ -718,7 +721,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //
     if ($stmt->execute()) {
         echo "Record added successfully";
-        header("Location: index.php?add_cv_success");
+        header("Location: index.php?manageCVs");
     } else {
         echo "Error: " . $sql . "<br>" . $stmt->error;
     }
