@@ -143,6 +143,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("iissssss",$user_id, $cv_id, $fullname, $professional_title, $address, $city, $country, $picname);
+        if ($stmt->execute()) {
+            echo "Record added successfully";
+        } else {
+            echo "Error: " . $sql . "<br>" . $stmt->error;
+        }
 
         //phone number
         foreach ($phone_numbers as $phone) {
