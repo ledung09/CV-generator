@@ -1,7 +1,10 @@
 <?php
 session_start();
 $state = $_POST['state'];
-$CVID_for_review = $_POST['CVID'];
+$CVID_for_review = 0;
+if (isset($_POST['CVID'])) {
+    $CVID_for_review = isset($_POST['CVID']);
+};
 include_once('./db/db_connection.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
@@ -18,11 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = $_POST["fname"];
     $professional_title = $_POST["profess"];
     $country = $_POST['country'];
-    $city = $_POST['city'];
+    $city = "";
+    if (isset($_POST['city'])) $city = $_POST['city'];
     $address = $_POST['address'];
     $picname = basename($_FILES["profile-img"]["name"]);
     $phone_numbers = $_POST['phone']; //another table,array
-    $emails   = $_POST['email'];        //another table, array
+    $emails = $_POST['email'];        //another table, array
 
 
     //experience
@@ -71,8 +75,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($cvResult && mysqli_num_rows($cvResult) > 0) {
         $cvRow = mysqli_fetch_assoc($cvResult);
         $cv_id = $cvRow['cv_id'];
-
-
 
     }
 
@@ -235,19 +237,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $expRow = mysqli_fetch_assoc($expResult);
             $experience_id = $expRow['experience_id'];
         }
-        
-        $descriptions = $_POST['job-des'];
-        foreach ($descriptions as $description) {
 
-            //$description = mysqli_real_escape_string($conn, $description);
-        
-            // Insert data into the 'experience_description' table
-            $insertQuery = "INSERT INTO experience_description (experience_id, description) VALUES ('$experience_id', '$description')";
-            if (!mysqli_query($conn, $insertQuery)) {
-                echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
-                exit();
+        if (isset($_POST['job-des'])) {
+            $descriptions = $_POST['job-des'];
+            foreach ($descriptions as $description) {
+    
+                //$description = mysqli_real_escape_string($conn, $description);
+            
+                // Insert data into the 'experience_description' table
+                $insertQuery = "INSERT INTO experience_description (experience_id, description) VALUES ('$experience_id', '$description')";
+                if (!mysqli_query($conn, $insertQuery)) {
+                    echo "Error: " . $insertQuery . "<br>" . mysqli_error($conn);
+                    exit();
+                }
             }
         }
+        
     } 
     else if($state == "review"){
         if (
@@ -708,12 +713,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
     }
 
-
-    
     //
     if ($stmt->execute()) {
         echo "Record added successfully";
-        header("Location: index.php?add_cv_success");
+        // header("Location: index.php?page=manageCVs");
     } else {
         echo "Error: " . $sql . "<br>" . $stmt->error;
     }
